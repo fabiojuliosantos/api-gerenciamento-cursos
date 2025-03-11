@@ -10,7 +10,7 @@ CREATE TABLE Alunos
 	Nome VARCHAR (100) NOT NULL,
 	Idade INT NOT NULL,
 	Email VARCHAR (50) NOT NULL,
-	DataMatricula DATETIME
+	DataMatricula DATETIME NOT NULL
 );
 
 CREATE TABLE Cursos 
@@ -28,5 +28,5 @@ CREATE TABLE Matriculas
 	FOREIGN KEY (AlunoID) REFERENCES Alunos(AlunoID),
 	CursoID INT NOT NULL,
 	FOREIGN KEY (CursoID) REFERENCES Cursos(CursoID),
-	DataMatricula DATETIME
+	DataMatricula DATETIME NOT NULL
 );

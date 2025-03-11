@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -15,6 +15,13 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="Infra\" />
+    <Folder Include="Infra\Context\" />
+    <Folder Include="Infra\Repositories\" />
+    <Folder Include="Infra\Interface\" />
+    <Folder Include="Profiles\" />
+    <Folder Include="Services\Services\" />
+    <Folder Include="Services\Interface\" />
   </ItemGroup>
 
 </Project>
