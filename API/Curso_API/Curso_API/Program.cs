@@ -1,4 +1,8 @@
 using System.Data;
+using Curso_API.Infra.Interface;
+using Curso_API.Infra.Repositories;
+using Curso_API.Services.Interface;
+using Curso_API.Services.Services;
 using Microsoft.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +17,10 @@ builder.Services.AddScoped<IDbConnection>(provider =>
     connection.Open();
     return connection;
 });
+
+builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
+builder.Services.AddScoped<IAlunoService, AlunoService>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
