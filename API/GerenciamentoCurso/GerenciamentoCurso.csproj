@@ -22,9 +22,6 @@
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Data\" />
-    <Folder Include="Properties\Profile\" />
-    <Folder Include="Services\Interface\" />
-    <Folder Include="Services\Service\" />
   </ItemGroup>
 
 </Project>
