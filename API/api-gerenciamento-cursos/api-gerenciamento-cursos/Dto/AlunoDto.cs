@@ -1,6 +1,6 @@
 ﻿namespace api_gerenciamento_cursos.Dto
 {
-    public class CreateAlunoDto
+    public class AlunoDto
     {
         public string Nome { get; set; }
         public int Idade { get; set; }

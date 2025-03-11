@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using api_gerenciamento_cursos.Domain;
 using api_gerenciamento_cursos.Infra.Interfaces;
+using AutoMapper;
 using Dapper;
 
 namespace api_gerenciamento_cursos.Infra.Repositories
@@ -8,10 +9,12 @@ namespace api_gerenciamento_cursos.Infra.Repositories
     public class AlunoRepository : IAlunoRepository
     {
         private readonly IDbConnection _connection;
+        private readonly IMapper _mapper;
 
-        public AlunoRepository(IDbConnection connection)
+        public AlunoRepository(IDbConnection connection, IMapper mapper)
         {
             _connection = connection;
+            _mapper = mapper;
         }
         public async Task<bool> AdicionaAlunoAsync(Aluno aluno)
         {
@@ -111,8 +114,8 @@ namespace api_gerenciamento_cursos.Infra.Repositories
             try
             {
                 string sql = string.Format("DELETE FROM ALUNOS WHERE ALUNOID={0}", id);
-                var empresaExcluida = await _connection.ExecuteAsync(sql);
-                return empresaExcluida > 0 ? true : false;
+                var alunoExcluida = await _connection.ExecuteAsync(sql);
+                return alunoExcluida > 0;
             }
             catch (Exception ex) { throw; }
         }
