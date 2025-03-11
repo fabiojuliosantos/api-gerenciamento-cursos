@@ -4,11 +4,13 @@ using AutoMapper;
 
 namespace api_gerenciamento_cursos.Profiles
 {
-    public class AlunoProfile : Profile
+    public class MappingProfile : Profile
     {
-        public AlunoProfile()
+        public MappingProfile()
         {
             CreateMap<AlunoDto, Aluno>().ReverseMap();
+            CreateMap<CursoDto, Cursos>().ReverseMap();
+            CreateMap<MatriculaDto, Matriculas>().ReverseMap();
         }
     }
 }

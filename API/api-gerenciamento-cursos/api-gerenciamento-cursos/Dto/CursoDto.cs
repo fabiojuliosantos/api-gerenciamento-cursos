@@ -1,0 +1,9 @@
+﻿namespace api_gerenciamento_cursos.Dto
+{
+    public class CursoDto
+    {
+        public string Nome { get; set; }
+        public string Descricao { get; set; }
+        public int CargaHoraria { get; set; }
+    }
+}
