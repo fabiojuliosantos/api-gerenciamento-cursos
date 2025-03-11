@@ -1,1 +1,32 @@
 # Scripts da criação do banco
+
+CREATE DATABASE CursoAPI_DB;
+
+USE CursoAPI_DB;
+
+CREATE TABLE Alunos 
+(
+	AlunoID INT PRIMARY KEY IDENTITY (1,1),
+	Nome VARCHAR (100) NOT NULL,
+	Idade INT NOT NULL,
+	Email VARCHAR (50) NOT NULL,
+	DataMatricula DATETIME
+);
+
+CREATE TABLE Cursos 
+(
+	CursoID INT PRIMARY KEY IDENTITY (1,1),
+	Nome VARCHAR (100) NOT NULL,
+	Descricao VARCHAR (500),
+	CargaHoraria INT NOT NULL
+);
+
+CREATE TABLE Matriculas 
+(
+	MatriculaID INT PRIMARY KEY IDENTITY (1,1),
+	AlunoID INT NOT NULL,
+	FOREIGN KEY (AlunoID) REFERENCES Alunos(AlunoID),
+	CursoID INT NOT NULL,
+	FOREIGN KEY (CursoID) REFERENCES Cursos(CursoID),
+	DataMatricula DATETIME
+);
