@@ -104,6 +104,7 @@ public class AlunoService : IAlunoService
     }
     #endregion
 
+    #region Validação de Entrada
     private static void Validacao<TValidator>(Aluno entity) where TValidator : AbstractValidator<Aluno>
     {
         try
@@ -121,4 +122,6 @@ public class AlunoService : IAlunoService
         }
         catch (Exception) { throw; }
     }
+
+#endregion
 }

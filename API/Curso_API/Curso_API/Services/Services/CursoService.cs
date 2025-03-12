@@ -14,6 +14,7 @@ public class CursoService : ICursoService
         _repository = repository;
     }
 
+    #region CRUD
     public async Task<bool> AdicionarCursoAsync<TValidator>(Curso curso) where TValidator : AbstractValidator<Curso>
     {
         try
@@ -86,6 +87,9 @@ public class CursoService : ICursoService
         catch (Exception e) { throw e; }
     }
 
+    #endregion
+
+    #region Validacao de Entrada
     private static void Validacao<TValidator>(Curso entity) where TValidator : AbstractValidator<Curso>
     {
         try
@@ -103,4 +107,6 @@ public class CursoService : ICursoService
         }
         catch (Exception) { throw; }
     }
+
+    #endregion
 }
