@@ -1,4 +1,8 @@
 using GerenciamentoCurso.Infra.Context;
+using GerenciamentoCurso.Infra.Interface;
+using GerenciamentoCurso.Infra.Repositories;
+using GerenciamentoCurso.Services.Interface;
+using GerenciamentoCurso.Services.Service;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -21,14 +25,17 @@ builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(connectionSt
 
 
 #region Services
-
-
+builder.Services.AddScoped<IAlunoService, AlunoService>();
+builder.Services.AddScoped<ICursoService, CursoService>();
+builder.Services.AddScoped<IMatriculaService, MatriculaService>();
 
 #endregion
 
 
 #region Repositories
-
+builder.Services.AddScoped<IAlunoRepository, AlunosRepository>();
+builder.Services.AddScoped<ICursoRepository, CursoRepository>();
+builder.Services.AddScoped<IMatriculaRepository, MatriculaRepository>();
 
 
 #endregion

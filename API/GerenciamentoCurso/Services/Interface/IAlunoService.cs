@@ -1,15 +1,16 @@
-﻿using GerenciamentoCurso.Domain;
+﻿using FluentValidation;
+using GerenciamentoCurso.Domain;
 using GerenciamentoCurso.Dto;
 
 namespace GerenciamentoCurso.Services.Interface
 {
     public interface IAlunoService
     {
-        Task<IEnumerable<Alunos>> RecuperarTodosAlunos();
-        Task<RetornoPaginado<Alunos>> RetornoPaginadoAluno(int pagina, int quantidade);
-        Task<Alunos> BuscasrAlunosPorId(int id);
-        Task<RespostaDto> CriarAluno(CriarAlunoDto criarAlunoDto);
-        Task<RespostaDto> AtualizarAluno(AtualizarAlunoDto atualizarAlunoDto);
-        Task<RespostaDto> DeletarAluno(int id);
+        Task<IEnumerable<AlunoComCurso>> RecuperaTodosAlunosAsync();
+        Task<RetornoPaginado<Alunos>> BuscarAlunoPorPaginaAsync(int pagina, int quantidade);
+        Task<AlunoComCurso> BuscaAlunoPorIdAsync(int id);
+        Task<bool> AdicionaAlunoAsync(Alunos aluno);
+        Task<bool> AtualizarAlunoAsync(Alunos aluno);
+        Task<bool> DeletarAlunoAsync(int id);
     }
 }

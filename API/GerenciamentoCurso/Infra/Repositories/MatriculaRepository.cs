@@ -9,29 +9,55 @@ namespace GerenciamentoCurso.Infra.Repositories
     public class MatriculaRepository : IMatriculaRepository
     {
         private readonly IDbConnection _conn;
-        private readonly Mapper _mapper;
+        private readonly IMapper _mapper;
 
-        public MatriculaRepository(IDbConnection conn, Mapper mapper)
+        public MatriculaRepository(IDbConnection conn, IMapper mapper)
         {
             _conn = conn;
             _mapper = mapper;
         }
 
-        public Task<bool> MatricularAluno(Matricula matricula)
+        public async Task<bool> MatricularAluno(Matricula matricula)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                string sql = "INSERT INTO MATRICULAS (AlunoID, CursoID, DataMatricula) VALUES(@AlunoID, @CursoID, @DataMatricula)";
 
-        public Task<bool> RemoverMatricula(int id)
-        {
-            throw new NotImplementedException();
+                var parametros = new
+                {
+                    AlunoID = matricula.AlunoId,
+                    CursoID = matricula.CursoId,
+                    DataMatricula = DateTime.Now
+                };
+
+                var matriculasAdicionadas = await _conn.ExecuteAsync(sql, parametros);
+
+                return matriculasAdicionadas > 0;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
+        
+
+        public async Task<bool> RemoverMatricula(int id)
+        {
+            try
+            {
+                string sql = string.Format("DELETE FROM MATRICULAS WHERE ALUNOID={0}", id);
+                var matriculaExcluida = await _conn.ExecuteAsync(sql);
+                return matriculaExcluida > 0;
+            }
+            catch (Exception ex) { throw; }
+        }
+        
 
         public async Task<RetornoPaginado<Matricula>> RetornoPaginadoMatricula(int pagina, int quantidade)
         {
             try
             {
-                string sql = "SELECT * FROM MATRICULA ORDER BY MATRICULAID OFFSET @OFFSET ROWS FETCH NEXT @QUANTIDADE ROWS ONLY ";
+                string sql = "SELECT * FROM MATRICULAS ORDER BY MATRICULAID OFFSET @OFFSET ROWS FETCH NEXT @QUANTIDADE ROWS ONLY ";
 
                 var parametros = new
                 {

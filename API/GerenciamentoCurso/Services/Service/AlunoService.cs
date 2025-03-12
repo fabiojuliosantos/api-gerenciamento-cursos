@@ -1,6 +1,9 @@
-﻿using GerenciamentoCurso.Domain;
+﻿using AutoMapper;
+using FluentValidation;
+using GerenciamentoCurso.Domain;
 using GerenciamentoCurso.Dto;
 using GerenciamentoCurso.Infra.Interface;
+using GerenciamentoCurso.Infra.Repositories;
 using GerenciamentoCurso.Services.Interface;
 
 namespace GerenciamentoCurso.Services.Service;
@@ -8,79 +11,41 @@ namespace GerenciamentoCurso.Services.Service;
 public class AlunoService : IAlunoService
 {
     private readonly IAlunoRepository _repository;
+    private readonly IMapper _mapper;
 
-    public AlunoService(IAlunoRepository repository)
+    public AlunoService(IAlunoRepository repository, IMapper mapper)
     {
         _repository = repository;
+        _mapper = mapper;
     }
 
-    public async Task<RespostaDto> AtualizarAluno(AtualizarAlunoDto atualizarAlunoDto)
+    public async Task<bool> AtualizarAlunoAsync(Alunos aluno)
     {
-        try
-        {
-            if(atualizarAlunoDto.AlunoId < 0)
-            {
-                return new RespostaDto(false, "Insira um ID válido!");
-            }
-
-            if (string.IsNullOrEmpty(atualizarAlunoDto.Nome))
-            {
-                return new RespostaDto(false, "Nome não pode ser nulo!!");
-            }
-
-            var alunoExistente = await _repository.BuscasrAlunosPorId(atualizarAlunoDto.AlunoId);
-            if (alunoExistente == null)
-                return new RespostaDto(false, "Aluno não encontrada");
-
-
-            alunoExistente.Nome = atualizarAlunoDto.Nome;
-
-            bool resultado = await _repository.AtualizarAluno(alunoExistente);
-
-            if (!resultado)
-                return new RespostaDto(false, "Erro ao atualizar empresa");
-
-            return new RespostaDto(true, "Empresa atualizada com sucesso!");
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
+        return await _repository.AtualizarAlunoAsync(aluno);
+    }
+    public async Task<bool> AdicionaAlunoAsync(Alunos aluno)
+    {
+        return await _repository.AdicionaAlunoAsync(aluno);
     }
 
-    public async Task<Alunos> BuscasrAlunosPorId(int id)
+    public async Task<AlunoComCurso> BuscaAlunoPorIdAsync(int id)
     {
-        try
-        {
-            if(id < 0 )
-            {
-                return await _repository.BuscasrAlunosPorId(id);
-            }
-        catch (Exception)
-        {
-
-            throw;
-        }
+        return await _repository.BuscaAlunoPorIdAsync(id);
     }
 
-    public Task<RespostaDto> CriarAluno(CriarAlunoDto criarAlunoDto)
+    public async Task<RetornoPaginado<Alunos>> BuscarAlunoPorPaginaAsync(int pagina, int quantidade)
     {
-        throw new NotImplementedException();
+        return await _repository.BuscaAlunoPorPagina(pagina, quantidade);
     }
 
-    public Task<RespostaDto> DeletarAluno(int id)
+    public async Task<bool> DeletarAlunoAsync(int id)
     {
-        throw new NotImplementedException();
+        return await _repository.DeletarAlunoAsync(id);
     }
 
-    public Task<IEnumerable<Alunos>> RecuperarTodosAlunos()
+    public async Task<IEnumerable<AlunoComCurso>> RecuperaTodosAlunosAsync()
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<RetornoPaginado<Alunos>> RetornoPaginadoAluno(int pagina, int quantidade)
-    {
-        throw new NotImplementedException();
+        return await _repository.RecuperaTodosAlunosAsync();
     }
 }
+

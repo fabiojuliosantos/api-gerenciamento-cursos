@@ -2,6 +2,7 @@
 using AutoMapper;
 using Dapper;
 using GerenciamentoCurso.Domain;
+using GerenciamentoCurso.Dto;
 using GerenciamentoCurso.Infra.Interface;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -18,17 +19,19 @@ public class AlunosRepository : IAlunoRepository
         _mapper = mapper;
     }
 
-    public async Task<bool> AtualizarAluno(Alunos alunos)
+    public async Task<bool> AtualizarAlunoAsync(Alunos alunos)
     {
         try
         {
-            string sql = "UPDATE ALUNOS SET NOME = NOME, EMAIL = @EMAIL, IDADE = @IDADE, DATAMATRICULA = DATAMATRICULA WHERE ALUNOID = @ALUNOID";
+            string sql = @"UPDATE ALUNOS SET NOME = @NOME, EMAIL = @EMAIL, IDADE = @IDADE WHERE ALUNOID = @Id";
             var parametros = new {
-            
+
+                alunos.AlunoId,
                 alunos.Nome,
                 alunos.Email,
                 alunos.Idade,
-                alunos.DataMatricula
+                Id = alunos.AlunoId
+                
             };
 
             var resultado = await _conn.ExecuteAsync(sql, parametros);
@@ -43,15 +46,14 @@ public class AlunosRepository : IAlunoRepository
         }
     }
 
-    public async Task<Alunos> BuscasrAlunosPorId(int id)
+    public async Task<bool> BuscarAlunoPorEmailAsync(string email)
     {
         try
         {
-            string sql = $"select * from alunos WHERE ALUNOID = {id}";
+            string sql = $"SELECT TOP 1 * FROM ALUNOS WHERE EMAIL={email}";
             var resultado = await _conn.QueryFirstOrDefault(sql);
 
-
-            return resultado;
+            return resultado;   
         }
         catch (Exception)
         {
@@ -60,17 +62,60 @@ public class AlunosRepository : IAlunoRepository
         }
     }
 
-    public async Task<bool> CriarAluno(Alunos alunos)
+  
+            public async Task<AlunoComCurso> BuscaAlunoPorIdAsync(int id)
+    {
+        try
+        {
+            string sql = @"
+            SELECT 
+            a.AlunoID, 
+            a.Nome, 
+            a.Idade, 
+            a.Email, 
+            a.DataMatricula, 
+            c.CursoID, 
+            c.Nome AS NomeCurso
+            FROM Alunos a
+            INNER JOIN Matriculas m ON a.AlunoID = m.AlunoID
+            INNER JOIN Cursos c ON m.CursoID = c.CursoID
+            WHERE a.AlunoID = @Id";
+
+            var cursosDoAluno = await _conn.QueryAsync<InfoCurso>(sql, new { Id = id });
+
+            var alunos = await _conn.QueryFirstOrDefaultAsync<AlunoComCurso>("SELECT * FROM ALUNOS WHERE ALUNOID = @Id", new { Id = id });
+
+            if (alunos != null)
+            {
+                alunos.Cursos = cursosDoAluno.ToList();
+            }
+
+            return alunos;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+
+        
+    
+
+    public async Task<bool> AdicionaAlunoAsync(Alunos alunos)
     {
         try
         {
             string sql = "insert into alunos(NOME,IDADE,EMAIL,DATAMATRICULA) values(@NOME,@IDADE,@EMAIL,@DATAMATRICULA)";
+
             var parametros = new
             {
-            alunos.Nome,
-            alunos.Idade,
-            alunos.Email,
-            alunos.DataMatricula
+                NOME = alunos.Nome,
+                IDADE = alunos.Idade,
+                EMAIL = alunos.Email,
+                DATAMATRICULA = DateTime.Now
+                
+           
             };
 
             var resultado = await _conn.ExecuteAsync(sql, parametros);
@@ -84,11 +129,11 @@ public class AlunosRepository : IAlunoRepository
         }
     }
 
-    public async Task<bool> DeletarAluno(int id)
+    public async Task<bool> DeletarAlunoAsync(int id)
     {
         try
         {
-            string sql = $"DELETE FROM ALUNOS WHERE ALUNOID = {id}";
+            string sql = string.Format("DELETE FROM ALUNOS WHERE ALUNOID ={0}",id);
             var resultado = await _conn.ExecuteAsync(sql);
 
             return resultado > 0;
@@ -100,22 +145,58 @@ public class AlunosRepository : IAlunoRepository
         }
     }
 
-    public async Task<IEnumerable<Alunos>> RecuperarTodosAlunos()
+
+    public async Task<IEnumerable<AlunoComCurso>> RecuperaTodosAlunosAsync()
     {
         try
         {
-            string sql = "SELECT * FROM ALUNOS";
-            var resultado = await _conn.QueryFirstOrDefault(sql);
-            return resultado;
+            string sql = @"
+        SELECT 
+        a.AlunoID, 
+        a.Nome, 
+        a.Idade, 
+        a.Email, 
+        a.DataMatricula, 
+        c.CursoID, 
+        c.Nome AS NomeCurso
+        FROM Alunos a
+        LEFT JOIN Matriculas m ON a.AlunoID = m.AlunoID
+        LEFT JOIN Cursos c ON m.CursoID = c.CursoID";
+
+            var alunos = new List<AlunoComCurso>();
+            var resultado = await _conn.QueryAsync<AlunoComCurso, InfoCurso, AlunoComCurso>(
+                sql,
+                (aluno, curso) =>
+                {
+                    var alunoExistente = alunos.FirstOrDefault(a => a.AlunoID == aluno.AlunoID);
+
+                    if (alunoExistente == null)
+                    {
+                        aluno.Cursos = new List<InfoCurso>();
+                        alunos.Add(alunoExistente = aluno);
+                    }
+
+                    if (curso != null)
+                    {
+                        alunoExistente.Cursos.Add(curso);
+                    }
+
+                    return alunoExistente;
+                },
+                splitOn: "CursoID"
+            );
+
+            return alunos;
         }
         catch (Exception)
         {
-
             throw;
         }
     }
 
-    public async Task<RetornoPaginado<Alunos>> RetornoPaginadoAluno(int pagina, int quantidade)
+
+
+    public async Task<RetornoPaginado<Alunos>> BuscaAlunoPorPagina(int pagina, int quantidade)
     {
         try
         {

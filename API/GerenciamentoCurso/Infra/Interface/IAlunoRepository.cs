@@ -1,14 +1,16 @@
 ﻿using GerenciamentoCurso.Domain;
+using GerenciamentoCurso.Dto;
 
 namespace GerenciamentoCurso.Infra.Interface
 {
     public interface IAlunoRepository
     {
-        Task<IEnumerable<Alunos>> RecuperarTodosAlunos();
-        Task<RetornoPaginado<Alunos>> RetornoPaginadoAluno(int pagina, int quantidade);
-        Task<Alunos> BuscasrAlunosPorId(int id);
-        Task<bool> CriarAluno(Alunos alunos);
-        Task<bool> AtualizarAluno(Alunos alunos);
-        Task<bool> DeletarAluno(int id);
+        Task<IEnumerable<AlunoComCurso>> RecuperaTodosAlunosAsync();
+        Task<RetornoPaginado<Alunos>> BuscaAlunoPorPagina(int pagina, int quantidade);
+        Task<AlunoComCurso> BuscaAlunoPorIdAsync(int id);
+        Task<bool> AdicionaAlunoAsync(Alunos aluno);
+        Task<bool> AtualizarAlunoAsync(Alunos aluno);
+        Task<bool> DeletarAlunoAsync(int id);
+        Task<bool> BuscarAlunoPorEmailAsync(string email);
     }
 }

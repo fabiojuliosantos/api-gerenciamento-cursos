@@ -22,12 +22,13 @@ namespace GerenciamentoCurso.Infra.Repositories
         {
             try
             {
-                string sql = "UPDATE CURSOS SET NOME = @NOME, DESCRICAO = @DESCRICAO, CARGAHORARIA = @CARGAHORARIA WHERE CURSOID = @CURSOID";
+                string sql = @"UPDATE CURSOS SET NOME = @NOME, DESCRICAO = @DESCRICAO, CARGAHORARIA = @CARGAHORARIA WHERE CURSOID = @Id";
                 var parametros = new
                 {
                     cursos.Nome,
                     cursos.Descricao,
-                    cursos.CargaHoraria
+                    cursos.CargaHoraria,
+                    ID = cursos.CursoId
                 };
 
                 var resultado = await _conn.ExecuteAsync(sql, parametros);
@@ -86,7 +87,7 @@ namespace GerenciamentoCurso.Infra.Repositories
             try
             {
                 string sql = "SELECT * FROM CURSOS";
-                var resultado = await _conn.QueryFirstOrDefault(sql);
+                var resultado = await _conn.QueryAsync<Cursos>(sql);
                 return resultado;
             }
             catch (Exception)
@@ -101,11 +102,12 @@ namespace GerenciamentoCurso.Infra.Repositories
             try
             {
 
-                string sql = $"select * from CURSOS WHERE CURSOID = {id}";
-                var resultado = await _conn.QueryFirstOrDefault(sql);
+                string sql = $"SELECT TOP 1 * FROM CURSOS WHERE CURSOID={id}";
+                var cursos = await _conn.QueryFirstOrDefaultAsync<Cursos>(sql);
+                return cursos;
 
 
-                return resultado;
+                
             }
             catch (Exception)
             {
