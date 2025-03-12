@@ -8,8 +8,8 @@ namespace api_gerenciamento_cursos.Services.Interface
         Task<IEnumerable<Aluno>> RecuperaTodosAlunosAsync();
         Task<RetornoPaginado<Aluno>> BuscarAlunoPorPaginaAsync(int pagina, int quantidade);
         Task<Aluno> BuscaAlunoPorIdAsync(int id);
-        Task<bool> AdicionaAlunoAsync(AlunoDto aluno);
-        Task<bool> AtualizarAlunoAsync(AlunoDto aluno);
+        Task<bool> AdicionaAlunoAsync(Aluno aluno);
+        Task<bool> AtualizarAlunoAsync(Aluno aluno);
         Task<bool> DeletarAlunoAsync(int id);
     }
 }

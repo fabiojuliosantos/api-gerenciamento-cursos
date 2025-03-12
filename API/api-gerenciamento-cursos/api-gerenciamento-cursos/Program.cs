@@ -1,11 +1,15 @@
 using api_gerenciamento_cursos.Infra.Context;
+using api_gerenciamento_cursos.Infra.Interfaces;
+using api_gerenciamento_cursos.Infra.Repositories;
+using api_gerenciamento_cursos.Services.Interface;
+using api_gerenciamento_cursos.Services.Service;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("RhConnection");
+var connectionString = builder.Configuration.GetConnectionString("FaculdadeConnection");
 
 builder.Services.AddScoped<IDbConnection>(provider =>
 {
@@ -15,6 +19,14 @@ builder.Services.AddScoped<IDbConnection>(provider =>
 });
 
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(connectionString));
+
+#region Services
+builder.Services.AddScoped<IAlunoService, AlunoService>();
+#endregion
+
+#region Repository
+builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
+#endregion
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

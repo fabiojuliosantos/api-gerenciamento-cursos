@@ -1,4 +1,5 @@
 ﻿using api_gerenciamento_cursos.Domain;
+using api_gerenciamento_cursos.Dto;
 
 namespace api_gerenciamento_cursos.Infra.Interfaces
 {

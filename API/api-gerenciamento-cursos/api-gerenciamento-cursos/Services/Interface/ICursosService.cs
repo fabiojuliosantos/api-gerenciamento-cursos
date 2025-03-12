@@ -7,8 +7,8 @@ namespace api_gerenciamento_cursos.Services.Interface
     {
         Task<IEnumerable<Cursos>> RecuperaCursosAsync();
         Task<Cursos> RecuperaCursosPorIdAsync(int id);
-        Task<bool> AdicionaCursosAsync(CursoDto cursos);
-        Task<bool> AtualizarCursosAsync(CursoDto cursos);
+        Task<bool> AdicionaCursosAsync(Cursos cursos);
+        Task<bool> AtualizarCursosAsync(Cursos cursos);
         Task<bool> DeletaCursosAsync(int id);
     }
 }

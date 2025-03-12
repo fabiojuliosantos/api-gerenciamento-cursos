@@ -33,32 +33,33 @@ namespace api_gerenciamento_cursos.Infra.Repositories
 
             return alunoCadastrado > 0;
         }
-        
+
 
         public async Task<bool> AtualizarAlunoAsync(Aluno aluno)
         {
             try
             {
-
-                string sql = "UPDATE ALUNOS SET NOME = @Nome, IDADE = @Idade, EMAIL = @Email, DATAMATRICULA = @DataMatricula WHERE ID = @Id";
-
+                string sql = @"
+            UPDATE ALUNOS 
+            SET Nome = @Nome, 
+            Idade = @Idade, 
+            Email = @Email 
+            WHERE ALUNOID = @Id";
 
                 var parametros = new
                 {
-                    aluno.Nome,
-                    aluno.Idade,
-                    aluno.Email,
-                    aluno.DataMatricula,
-                    aluno.AlunoID 
+                    Nome = aluno.Nome,
+                    Idade = aluno.Idade,
+                    Email = aluno.Email,
+                    Id = aluno.AlunoID 
                 };
 
                 var resultado = await _connection.ExecuteAsync(sql, parametros);
-
-                return resultado > 0;
+                return resultado > 0 ? true : false;
             }
             catch (Exception ex)
             {
-                throw;
+                throw; 
             }
         }
 
@@ -66,9 +67,9 @@ namespace api_gerenciamento_cursos.Infra.Repositories
         {
             try
             {
-                string sql = $"SELECT * FROM Aluno WHERE AlunoID = {id}";
-                var alunos = await _connection.QueryFirstOrDefaultAsync<Aluno>(sql);
-                return alunos;
+                string sql = "SELECT * FROM Alunos WHERE AlunoID = @Id";
+                var aluno = await _connection.QueryFirstOrDefaultAsync<Aluno>(sql, new { Id = id });
+                return aluno;
             }
             catch (Exception)
             {
@@ -123,7 +124,7 @@ namespace api_gerenciamento_cursos.Infra.Repositories
         public async Task<IEnumerable<Aluno>> RecuperaTodosAlunosAsync()
         {
             try { 
-            string sql = "SELECT * FROM Aluno";
+            string sql = "SELECT * FROM ALUNOS";
             var alunos = await _connection.QueryAsync<Aluno>(sql);
             return alunos;
             }
