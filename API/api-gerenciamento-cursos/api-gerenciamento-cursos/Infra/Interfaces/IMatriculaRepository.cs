@@ -6,6 +6,6 @@ namespace api_gerenciamento_cursos.Infra.Interfaces
     {
         Task<RetornoPaginado<Matriculas>> ListarMatriculasPaginadoAsync(int pagina, int qtdPorPagina);
         Task<bool> AdicionarMatriculaAsync (Matriculas matriculas);
-        Task<bool> AtualizarMatriculaAsync(Matriculas matriculas);
+        Task<bool> DeletarMatriculaAsync(int id);
     }
 }

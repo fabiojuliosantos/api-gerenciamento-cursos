@@ -23,9 +23,9 @@ namespace api_gerenciamento_cursos.Services.Service
             return await _matriculaRepository.AdicionarMatriculaAsync(matriculas);
         }
 
-        public async Task<bool> AtualizarMatriculaAsync(Matriculas matriculas)
+        public async Task<bool> DeletarMatriculaAsync(int id)
         {
-            return await _matriculaRepository.AtualizarMatriculaAsync(matriculas);
+            return await _matriculaRepository.DeletarMatriculaAsync(id);
         }
 
         public async Task<RetornoPaginado<Matriculas>> ListarMatriculasPaginadoAsync(int pagina, int qtdPorPagina)

@@ -27,11 +27,13 @@ builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(connectionSt
 #region Services
 builder.Services.AddScoped<IAlunoService, AlunoService>();
 builder.Services.AddScoped<ICursosService, CursosService>();
+builder.Services.AddScoped<IMatriculaService, MatriculaService>();
 #endregion
 
 #region Repository
 builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
 builder.Services.AddScoped<ICursosRepository, CursosRepository>();
+builder.Services.AddScoped<IMatriculaRepository, MatriculaRepository>();
 #endregion
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

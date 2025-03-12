@@ -15,14 +15,38 @@ namespace api_gerenciamento_cursos.Infra.Repositories
             _connection = connection;
             _mapper = mapper;
         }
-        public Task<bool> AdicionarMatriculaAsync(Matriculas matriculas)
+        public async Task<bool> AdicionarMatriculaAsync(Matriculas matriculas)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string sql = "INSERT INTO MATRICULAS (AlunoID, CursoID, DataMatricula) VALUES(@AlunoID, @CursoID, @DataMatricula)";
+
+                var parametros = new
+                {
+                    AlunoID = matriculas.AlunoID,
+                    CursoID = matriculas.CursoID,
+                    DataMatricula = matriculas.DataMatricula
+                };
+
+                var matriculasAdicionadas = await _connection.ExecuteAsync(sql, parametros);
+
+                return matriculasAdicionadas > 0;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
-        public Task<bool> AtualizarMatriculaAsync(Matriculas matriculas)
+        public async Task<bool> DeletarMatriculaAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string sql = string.Format("DELETE FROM MATRICULAS WHERE ALUNOID={0}", id);
+                var matriculaExcluida = await _connection.ExecuteAsync(sql);
+                return matriculaExcluida > 0;
+            }
+            catch (Exception ex) { throw; }
         }
 
         public async Task<RetornoPaginado<Matriculas>> ListarMatriculasPaginadoAsync(int pagina, int quantidade)
