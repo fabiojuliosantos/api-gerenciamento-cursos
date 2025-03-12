@@ -18,14 +18,13 @@ namespace api_gerenciamento_cursos.Infra.Repositories
         }
         public async Task<bool> AdicionaAlunoAsync(Aluno aluno)
         {
-            string sql = "INSERT INTO ALUNOS (Nome, Idade, Email, DataMatricula) VALUES (@Nome, @Idade, @Email, @DataMatricula)";
+            string sql = "INSERT INTO ALUNOS (Nome, Idade, Email) VALUES (@Nome, @Idade, @Email)";
 
             var parametros = new
             {
                 aluno.Nome,
                 aluno.Idade,
-                aluno.Email,
-                aluno.DataMatricula
+                aluno.Email
             };
 
             // p/ comandos de manipulação (insert, delete, update), utiliza-se ExecuteAsync

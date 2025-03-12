@@ -1,8 +1,6 @@
 ﻿using api_gerenciamento_cursos.Domain;
-using api_gerenciamento_cursos.Dto;
 using api_gerenciamento_cursos.Infra.Interfaces;
 using api_gerenciamento_cursos.Services.Interface;
-using api_gerenciamento_cursos.Utilities;
 using AutoMapper;
 
 namespace api_gerenciamento_cursos.Services.Service
