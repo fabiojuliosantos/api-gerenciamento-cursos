@@ -1,4 +1,5 @@
-﻿using Curso_API.Domain;
+﻿using Curso_API.Domain.Entities;
+using Curso_API.Dto;
 
 namespace Curso_API.Infra.Interface;
 

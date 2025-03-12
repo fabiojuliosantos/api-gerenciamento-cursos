@@ -1,4 +1,4 @@
-﻿namespace Curso_API.Domain;
+﻿namespace Curso_API.Domain.Entities;
 
 public class Curso
 {

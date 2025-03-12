@@ -1,5 +1,6 @@
 ﻿using System.Data;
-using Curso_API.Domain;
+using Curso_API.Domain.Entities;
+using Curso_API.Dto;
 using Curso_API.Infra.Interface;
 using Dapper;
 
@@ -60,6 +61,9 @@ public class AlunoRepository : IAlunoRepository
         {
             string sql = $"SELECT TOP 1 * FROM Alunos WHERE AlunoID = {alunoID}";
             var aluno = await _connection.QueryFirstOrDefaultAsync<Aluno>(sql);
+            string cursoSql = $"SELECT C.CursoID,C.Nome FROM Cursos C INNER JOIN Matriculas M ON C.CursoID = M.CursoID WHERE M.AlunoID = {aluno.AlunoID}";
+            var cursos = await _connection.QueryAsync<ReadCursoDto>(cursoSql);
+            aluno.Cursos = cursos.ToList();
             return aluno;
         }
         catch (Exception e) { throw e; }
@@ -69,13 +73,19 @@ public class AlunoRepository : IAlunoRepository
     {
         try
         {
-            string sql = @$"SELECT * FROM Alunos ORDER BY AlunoID OFFSET @OFFSET ROWS FETCH NEXT @FETCHNEXT ROWS ONLY";
+            string sql = $"SELECT * FROM Alunos ORDER BY AlunoID OFFSET @OFFSET ROWS FETCH NEXT @FETCHNEXT ROWS ONLY";
             var parametros = new
             {
                 OFFSET = (pagina - 1) * quantidade,
                 FETCHNEXT = quantidade
             };
-            var resposta = await _connection.QueryAsync<Aluno>(sql, parametros);
+            var alunos = await _connection.QueryAsync<Aluno>(sql, parametros);
+            foreach (var aluno in alunos)
+            {
+                string cursoSql = $"SELECT C.CursoID,C.Nome FROM Cursos C INNER JOIN Matriculas M ON C.CursoID = M.CursoID WHERE M.AlunoID = {aluno.AlunoID}";
+                var cursos = await _connection.QueryAsync<ReadCursoDto>(cursoSql);
+                aluno.Cursos = cursos.ToList();
+            }
             string sqlQuantidadeAluno = "SELECT COUNT(*) FROM Alunos";
             var quantidadeAlunos = await _connection.QueryFirstOrDefaultAsync<int>(sqlQuantidadeAluno);
             return new RetornoPaginado<Aluno>
@@ -83,7 +93,7 @@ public class AlunoRepository : IAlunoRepository
                 Pagina = pagina,
                 QtdPagina = quantidade,
                 TotalRegistros = quantidadeAlunos,
-                Lista = resposta.ToList()
+                Lista = alunos.ToList()
             };
         }
         catch (Exception e) { throw e; }
@@ -95,6 +105,12 @@ public class AlunoRepository : IAlunoRepository
         {
             string sql = $"SELECT * FROM Alunos;";
             var alunos = await _connection.QueryAsync<Aluno>(sql);
+            foreach (var aluno in alunos)
+            {
+                string cursoSql = $"SELECT C.CursoID,C.Nome FROM Cursos C INNER JOIN Matriculas M ON C.CursoID = M.CursoID WHERE M.AlunoID = {aluno.AlunoID}";
+                var cursos = await _connection.QueryAsync<ReadCursoDto>(cursoSql);
+                aluno.Cursos = cursos.ToList();
+            }
             return alunos.ToList();
         }
         catch (Exception e) { throw e; }
@@ -104,7 +120,7 @@ public class AlunoRepository : IAlunoRepository
     {
         try
         {
-            string sql = @$"DELETE FROM Alunos WHERE AlunoID = {alunoID}";
+            string sql = $"DELETE FROM Alunos WHERE AlunoID = {alunoID}";
             var resposta = await _connection.ExecuteAsync(sql);
             return resposta > 0 ? true : false;
         }

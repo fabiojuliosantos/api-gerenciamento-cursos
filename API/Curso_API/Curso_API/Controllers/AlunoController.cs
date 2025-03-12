@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
-using Curso_API.Domain;
+using Curso_API.Domain.Entities;
+using Curso_API.Domain.Validators;
 using Curso_API.Dto;
 using Curso_API.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Curso_API.Controllers;
 
@@ -80,7 +82,32 @@ public class AlunoController : Controller
         {
             var aluno = _mapper.Map<Aluno>(alunoDto);
             aluno.DataMatricula = DateTime.Now;
-            var resposta = await _service.AdicionarAlunoAsync(aluno);
+            var resposta = await _service.AdicionarAlunoAsync<AlunoValidator>(aluno);
+            return Ok(resposta);
+        }
+        catch (Exception e) { return BadRequest(e.Message); }
+    }
+    
+    [HttpPut("atualizar-aluno")]
+    public async Task<IActionResult> AtualizarAluno([FromQuery] int alunoID,[FromBody] AlunoDto alunoDto)
+    {
+        try
+        {
+            var aluno = _mapper.Map<Aluno>(alunoDto);
+            aluno.AlunoID = alunoID;
+            aluno.DataMatricula = DateTime.Now;
+            var resposta = await _service.AtualizarAlunoAsync<AlunoValidator>(aluno);
+            return Ok(resposta);
+        }
+        catch (Exception e) { return BadRequest(e.Message); }
+    }
+
+    [HttpDelete("excluir-aluno")]
+    public async Task<IActionResult> ExcluirAluno([FromQuery] int alunoID)
+    {
+        try
+        {
+            var resposta = _service.ExcluirAlunoAsync(alunoID);
             return Ok(resposta);
         }
         catch (Exception e) { return BadRequest(e.Message); }
