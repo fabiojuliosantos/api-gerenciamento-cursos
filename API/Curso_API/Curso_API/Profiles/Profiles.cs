@@ -11,5 +11,7 @@ public class Profiles : Profile
         CreateMap<Aluno,AlunoDto>().ReverseMap();
         CreateMap<Aluno,ReadAlunoDto>().ReverseMap();
         CreateMap<Curso,ReadCursoDto>().ReverseMap();
+        CreateMap<Curso, CursoDto>().ReverseMap();
+        CreateMap<Matricula, MatriculaDto>().ReverseMap();
     }
 }

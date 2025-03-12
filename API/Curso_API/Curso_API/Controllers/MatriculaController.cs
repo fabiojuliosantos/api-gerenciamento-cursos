@@ -3,9 +3,7 @@ using Curso_API.Domain.Entities;
 using Curso_API.Domain.Validators;
 using Curso_API.Dto;
 using Curso_API.Services.Interface;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Curso_API.Controllers;
 
@@ -42,13 +40,14 @@ public class MatriculaController : Controller
     }
 
     [HttpPost("adicionar-matricula")]
-    public async Task<IActionResult> AdicionarMatricula<TValidator>([FromBody] MatriculaDto matriculaDto) where TValidator : AbstractValidator<Matricula>
+    public async Task<IActionResult> AdicionarMatricula([FromBody] MatriculaDto matriculaDto)
     {
         try
         {
             var matricula = _mapper.Map<Matricula>(matriculaDto);
-            var resposta = await _service.AdicionarMatriculaAsync<TValidator>(matricula);
-            return Ok(resposta);
+            var resposta = await _service.AdicionarMatriculaAsync<MatriculaValidator>(matricula);
+            if (resposta) return Ok("Matrícula efetuada com sucesso!");
+            else { return BadRequest("Erro inesperado!"); }
         }
         catch (Exception e) { return BadRequest(e.Message); }
     }
@@ -58,8 +57,9 @@ public class MatriculaController : Controller
     {
         try
         {
-            var resposta = _service.ExcluirMatriculaAsync(matriculaID);
-            return Ok(resposta);
+            var resposta = await _service.ExcluirMatriculaAsync(matriculaID);
+            if (resposta) return Ok("Matrícula excluída com sucesso!");
+            else { return BadRequest("Erro inesperado!"); }
         }
         catch (Exception e) { return BadRequest(e.Message); }
     }

@@ -63,7 +63,8 @@ public class CursoController : Controller
         {
             var curso = _mapper.Map<Curso>(cursoDto);
             var resposta = await _service.AdicionarCursoAsync<CursoValidator>(curso);
-            return Ok(resposta);
+            if (resposta) return Ok("Curso cadastrado com sucesso!");
+            else { return BadRequest("Erro inesperado!"); }
         }
         catch (Exception e) { return BadRequest(e.Message); }
     }
@@ -76,7 +77,8 @@ public class CursoController : Controller
             var curso = _mapper.Map<Curso>(cursoDto);
             curso.CursoID = cursoID;
             var resposta = await _service.AtualizarCursoAsync<CursoValidator>(curso);
-            return Ok(resposta);
+            if (resposta) return Ok("Curso atualizado com sucesso!");
+            else { return BadRequest("Erro inesperado!"); }
         }
         catch (Exception e) { return BadRequest(e.Message); }
     }
@@ -86,8 +88,9 @@ public class CursoController : Controller
     {
         try
         {
-            var resposta = _service.ExcluirCursoAsync(cursoID);
-            return Ok(resposta);
+            var resposta = await _service.ExcluirCursoAsync(cursoID);
+            if (resposta) return Ok("Curso excluído com sucesso!");
+            else { return BadRequest("Erro inesperado!"); }
         }
         catch (Exception e) { return BadRequest(e.Message); }
     }

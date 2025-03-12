@@ -61,7 +61,7 @@ public class AlunoRepository : IAlunoRepository
         {
             string sql = $"SELECT TOP 1 * FROM Alunos WHERE AlunoID = {alunoID}";
             var aluno = await _connection.QueryFirstOrDefaultAsync<Aluno>(sql);
-            string cursoSql = $"SELECT C.CursoID,C.Nome FROM Cursos C INNER JOIN Matriculas M ON C.CursoID = M.CursoID WHERE M.AlunoID = {alunoID}";
+            string cursoSql = $"SELECT DISTINCT C.CursoID,C.Nome FROM Cursos C INNER JOIN Matriculas M ON C.CursoID = M.CursoID WHERE M.AlunoID = {alunoID}";
             var cursos = await _connection.QueryAsync<ReadCursoDto>(cursoSql);
             if (aluno.Cursos == null) { aluno.Cursos = cursos.ToList(); }
             return aluno;
@@ -82,7 +82,7 @@ public class AlunoRepository : IAlunoRepository
             var alunos = await _connection.QueryAsync<Aluno>(sql, parametros);
             foreach (var aluno in alunos)
             {
-                string cursoSql = $"SELECT C.CursoID,C.Nome FROM Cursos C INNER JOIN Matriculas M ON C.CursoID = M.CursoID WHERE M.AlunoID = {aluno.AlunoID}";
+                string cursoSql = $"SELECT DISTINCT C.CursoID,C.Nome FROM Cursos C INNER JOIN Matriculas M ON C.CursoID = M.CursoID WHERE M.AlunoID = {aluno.AlunoID}";
                 var cursos = await _connection.QueryAsync<ReadCursoDto>(cursoSql);
                 if (aluno.Cursos == null) { aluno.Cursos = cursos.ToList(); }
 
@@ -108,7 +108,7 @@ public class AlunoRepository : IAlunoRepository
             var alunos = await _connection.QueryAsync<Aluno>(sql);
             foreach (var aluno in alunos)
             {
-                string cursoSql = $"SELECT C.CursoID,C.Nome FROM Cursos C INNER JOIN Matriculas M ON C.CursoID = M.CursoID WHERE M.AlunoID = {aluno.AlunoID}";
+                string cursoSql = $"SELECT DISTINCT C.CursoID,C.Nome FROM Cursos C INNER JOIN Matriculas M ON C.CursoID = M.CursoID WHERE M.AlunoID = {aluno.AlunoID}";
                 var cursos = await _connection.QueryAsync<ReadCursoDto>(cursoSql);
                 if (aluno.Cursos == null) { aluno.Cursos = cursos.ToList(); }
             }

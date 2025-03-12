@@ -40,7 +40,7 @@ public class AlunoController : Controller
     }
 
     [HttpGet("buscar-aluno-id")]
-    public async Task<IActionResult> BuscarAlunoPorId([FromQuery]int alunoID)
+    public async Task<IActionResult> BuscarAlunoPorId([FromQuery] int alunoID)
     {
         try
         {
@@ -58,11 +58,11 @@ public class AlunoController : Controller
     }
 
     [HttpGet("buscar-aluno-paginado")]
-    public async Task<IActionResult> BuscarAlunoPaginado([FromQuery]int pagina, [FromQuery] int quantidade)
+    public async Task<IActionResult> BuscarAlunoPaginado([FromQuery] int pagina, [FromQuery] int quantidade)
     {
         try
         {
-            var alunos = await _service.BuscarAlunoPorPaginaAsync(pagina,quantidade);
+            var alunos = await _service.BuscarAlunoPorPaginaAsync(pagina, quantidade);
             if (alunos == null)
             {
                 return NotFound("Nenhum aluno foi encontrado.");
@@ -74,7 +74,7 @@ public class AlunoController : Controller
         }
         catch (Exception e) { return BadRequest(e.Message); }
     }
-    
+
     [HttpPost("adicionar-aluno")]
     public async Task<IActionResult> AdicionarAluno([FromBody] AlunoDto alunoDto)
     {
@@ -83,13 +83,14 @@ public class AlunoController : Controller
             var aluno = _mapper.Map<Aluno>(alunoDto);
             aluno.DataMatricula = DateTime.Now;
             var resposta = await _service.AdicionarAlunoAsync<AlunoValidator>(aluno);
-            return Ok(resposta);
+            if (resposta) return Ok("Aluno cadastrado com sucesso!");
+            else { return BadRequest("Erro inesperado!"); }
         }
         catch (Exception e) { return BadRequest(e.Message); }
     }
-    
+
     [HttpPut("atualizar-aluno")]
-    public async Task<IActionResult> AtualizarAluno([FromQuery] int alunoID,[FromBody] AlunoDto alunoDto)
+    public async Task<IActionResult> AtualizarAluno([FromQuery] int alunoID, [FromBody] AlunoDto alunoDto)
     {
         try
         {
@@ -97,7 +98,8 @@ public class AlunoController : Controller
             aluno.AlunoID = alunoID;
             aluno.DataMatricula = DateTime.Now;
             var resposta = await _service.AtualizarAlunoAsync<AlunoValidator>(aluno);
-            return Ok(resposta);
+            if (resposta) return Ok("Aluno atualizado com sucesso!");
+            else { return BadRequest("Erro inesperado!"); }
         }
         catch (Exception e) { return BadRequest(e.Message); }
     }
@@ -107,8 +109,9 @@ public class AlunoController : Controller
     {
         try
         {
-            var resposta = _service.ExcluirAlunoAsync(alunoID);
-            return Ok(resposta);
+            var resposta = await _service.ExcluirAlunoAsync(alunoID);
+            if (resposta) return Ok("Aluno excluído com sucesso!");
+            else { return BadRequest("Erro inesperado!"); }
         }
         catch (Exception e) { return BadRequest(e.Message); }
     }

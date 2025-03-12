@@ -23,7 +23,7 @@ public class MatriculaService : IMatriculaService
             var resposta = await _repository.AdicionarMatricula(matricula);
             if (!resposta)
             {
-                throw new Exception("Erro inesperado!");
+                throw new Exception("O campo AlunoID ou CursoID está incorreto!");
             }
             else
             {
