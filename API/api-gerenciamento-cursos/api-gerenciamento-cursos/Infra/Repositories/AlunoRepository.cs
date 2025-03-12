@@ -81,8 +81,16 @@ namespace api_gerenciamento_cursos.Infra.Repositories
             INNER JOIN Cursos c ON m.CursoID = c.CursoID
             WHERE a.AlunoID = @Id";
 
-                var alunoComCurso = await _connection.QueryFirstOrDefaultAsync<AlunoComCurso>(sql, new { Id = id });
-                return alunoComCurso;
+                var cursosDoAluno = await _connection.QueryAsync<CursoInfo>(sql, new { Id = id });
+
+                var aluno = await _connection.QueryFirstOrDefaultAsync<AlunoComCurso>("SELECT * FROM Alunos WHERE AlunoID = @Id", new { Id = id });
+
+                if (aluno != null)
+                {
+                    aluno.Cursos = cursosDoAluno.ToList();
+                }
+
+                return aluno;
             }
             catch (Exception)
             {
