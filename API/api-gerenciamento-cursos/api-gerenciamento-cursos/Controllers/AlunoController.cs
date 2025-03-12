@@ -73,8 +73,8 @@ namespace api_gerenciamento_cursos.Controllers
             return Ok(aluno);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> BuscarAlunosPorPaginaAsync([FromQuery] int pagina, [FromQuery] int quantidade)
+        [HttpGet("{pagina}/{quantidade}")]
+        public async Task<IActionResult> BuscarAlunosPorPaginaAsync(int pagina, int quantidade)
         {
             var alunos = await _alunoService.BuscarAlunoPorPaginaAsync(pagina, quantidade);
             return Ok(alunos);
@@ -92,7 +92,7 @@ namespace api_gerenciamento_cursos.Controllers
             return NotFound("Aluno não encontrado");
         }
 
-        [HttpGet("todos")]
+        [HttpGet]
         public async Task<IActionResult> RecuperaTodosAlunosAsync()
         {
             var alunos = await _alunoService.RecuperaTodosAlunosAsync();
