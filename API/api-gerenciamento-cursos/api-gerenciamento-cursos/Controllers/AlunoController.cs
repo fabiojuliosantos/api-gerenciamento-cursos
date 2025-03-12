@@ -39,6 +39,23 @@ namespace api_gerenciamento_cursos.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> RecuperaTodosAlunosAsync()
+        {
+            var alunos = await _alunoService.RecuperaTodosAlunosAsync();
+
+            var alunosDto = alunos.Select(aluno => new ReadAlunoDto
+            {
+                AlunoID = aluno.AlunoID,
+                Nome = aluno.Nome,
+                Idade = aluno.Idade,
+                Email = aluno.Email,
+                DataMatricula = aluno.DataMatricula
+            });
+
+            return Ok(alunosDto);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> AtualizarAlunoAsync(int id, [FromBody] AlunoDto alunoDto)
         {
@@ -90,13 +107,6 @@ namespace api_gerenciamento_cursos.Controllers
             }
 
             return NotFound("Aluno não encontrado");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> RecuperaTodosAlunosAsync()
-        {
-            var alunos = await _alunoService.RecuperaTodosAlunosAsync();
-            return Ok(alunos);
         }
     }
 }
