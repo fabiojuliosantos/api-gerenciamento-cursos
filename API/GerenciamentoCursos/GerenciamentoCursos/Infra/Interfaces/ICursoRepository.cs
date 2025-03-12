@@ -1,8 +1,8 @@
 ﻿using GerenciamentoCursos.Domain;
 
-namespace GerenciamentoCursos.Services.Interface
+namespace GerenciamentoCursos.Infra.Interfaces
 {
-    public interface ICursoService
+    public interface ICursoRepository
     {
         Task<List<Curso>> BuscarTodosCursosAsync();
         Task<Curso> BuscarCursoPorIdAsync(int id);

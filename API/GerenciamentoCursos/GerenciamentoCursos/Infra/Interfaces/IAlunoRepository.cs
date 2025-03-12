@@ -1,4 +1,5 @@
 ﻿using GerenciamentoCursos.Domain;
+using GerenciamentoCursos.Dto;
 
 namespace GerenciamentoCursos.Infra.Interfaces
 {

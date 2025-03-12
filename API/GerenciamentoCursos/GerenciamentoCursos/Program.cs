@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using GerenciamentoCursos.Infra.Context;
 using GerenciamentoCursos.Infra.Interfaces;
 using GerenciamentoCursos.Infra.Repositories;
-using GerenciamentoCursos.Services;
 using GerenciamentoCursos.Services.Interface;
 using GerenciamentoCursos.Services.Services;
+using GerenciamentoCursos.MappingProfiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +26,13 @@ builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(connectionSt
 builder.Services.AddScoped<IAlunoService, AlunoService>();
 builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
 
+builder.Services.AddScoped<ICursoService, CursoService>();
+builder.Services.AddScoped<ICursoRepository, CursoRepository>();
+
+builder.Services.AddScoped<IMatriculaService, MatriculaService>();
+builder.Services.AddScoped<IMatriculaRepository, MatriculaRepository>();
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

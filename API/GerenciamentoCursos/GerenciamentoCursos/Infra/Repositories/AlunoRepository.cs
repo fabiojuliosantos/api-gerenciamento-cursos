@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using Dapper;
 using GerenciamentoCursos.Domain;
+using GerenciamentoCursos.Dto;
 using GerenciamentoCursos.Infra.Interfaces;
 
 namespace GerenciamentoCursos.Infra.Repositories
@@ -18,8 +19,10 @@ namespace GerenciamentoCursos.Infra.Repositories
         {
             try
             {
-                string sql = @"INSERT INTO Alunos (Nome, Idade, Email, DataMatricula) 
-                               VALUES (@Nome, @Idade, @Email, @DataMatricula)";
+                string sql = @"
+            INSERT INTO Alunos (Nome, Idade, Email, DataMatricula) 
+            OUTPUT INSERTED.AlunoID
+            VALUES (@Nome, @Idade, @Email, @DataMatricula)";
 
                 var parametros = new
                 {
@@ -29,14 +32,22 @@ namespace GerenciamentoCursos.Infra.Repositories
                     DataMatricula = aluno.DataMatricula
                 };
 
-                var alunoCadastrado = await _connection.ExecuteAsync(sql, parametros);
-                return alunoCadastrado > 0;
+                var alunoID = await _connection.ExecuteScalarAsync<int>(sql, parametros);
+
+                if (alunoID > 0)
+                {
+                    aluno.AlunoID = alunoID;
+                    return true;
+                }
+
+                return false;
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro ao criar aluno.", ex);
             }
         }
+
 
         public async Task<bool> ExcluirAlunoAsync(int id)
         {
@@ -59,9 +70,51 @@ namespace GerenciamentoCursos.Infra.Repositories
         {
             try
             {
-                string sql = @"SELECT * FROM Alunos WHERE AlunoID = @AlunoID";
+                string sql = @"
+        SELECT 
+            a.AlunoID,
+            a.Nome,
+            a.Idade,
+            a.Email,
+            a.DataMatricula,
+            c.CursoID,
+            COALESCE(c.Nome, 'Curso sem nome') AS Nome,
+            c.Descricao,
+            c.CargaHoraria
+        FROM 
+            Alunos a
+        LEFT JOIN 
+            Matriculas m ON a.AlunoID = m.AlunoID
+        LEFT JOIN 
+            Cursos c ON m.CursoID = c.CursoID
+        WHERE 
+            a.AlunoID = @AlunoID;";
 
-                return await _connection.QueryFirstOrDefaultAsync<Aluno>(sql, new { AlunoID = id });
+                var alunoDicionario = new Dictionary<int, Aluno>();
+
+                var alunoComCursos = await _connection.QueryAsync<Aluno, Curso, Aluno>(
+                    sql,
+                    (aluno, curso) =>
+                    {
+                        if (!alunoDicionario.TryGetValue(aluno.AlunoID, out var alunoExistente))
+                        {
+                            alunoExistente = aluno;
+                            alunoExistente.Cursos = new List<Curso>();
+                            alunoDicionario.Add(aluno.AlunoID, alunoExistente);
+                        }
+
+                        if (curso != null && curso.CursoID > 0)
+                        {
+                            alunoExistente.Cursos.Add(curso);
+                        }
+
+                        return alunoExistente;
+                    },
+                    new { AlunoID = id },
+                    splitOn: "CursoID"
+                );
+
+                return alunoDicionario.Values.FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -69,14 +122,54 @@ namespace GerenciamentoCursos.Infra.Repositories
             }
         }
 
+
+
         public async Task<List<Aluno>> BuscarTodosAlunosAsync()
         {
             try
             {
-                string sql = @"SELECT * FROM Alunos";
+                string sql = @"
+        SELECT 
+            a.AlunoID,
+            a.Nome,
+            a.Idade,
+            a.Email,
+            a.DataMatricula,
+            c.CursoID,
+            COALESCE(c.Nome, 'Curso sem nome') AS Nome,
+            c.Descricao,
+            c.CargaHoraria
+        FROM 
+            Alunos a
+        LEFT JOIN 
+            Matriculas m ON a.AlunoID = m.AlunoID
+        LEFT JOIN 
+            Cursos c ON m.CursoID = c.CursoID;";
 
-                var alunos = await _connection.QueryAsync<Aluno>(sql);
-                return alunos.ToList();
+                var alunoDicionario = new Dictionary<int, Aluno>();
+
+                var alunos = await _connection.QueryAsync<Aluno, Curso, Aluno>(
+                    sql,
+                    (aluno, curso) =>
+                    {
+                        if (!alunoDicionario.TryGetValue(aluno.AlunoID, out var alunoExistente))
+                        {
+                            alunoExistente = aluno;
+                            alunoExistente.Cursos = new List<Curso>();
+                            alunoDicionario.Add(aluno.AlunoID, alunoExistente);
+                        }
+
+                        if (curso != null && curso.CursoID > 0)
+                        {
+                            alunoExistente.Cursos.Add(curso);
+                        }
+
+                        return alunoExistente;
+                    },
+                    splitOn: "CursoID"
+                );
+
+                return alunoDicionario.Values.ToList();
             }
             catch (Exception ex)
             {
@@ -84,14 +177,32 @@ namespace GerenciamentoCursos.Infra.Repositories
             }
         }
 
+
         public async Task<RetornoPaginado<Aluno>> BuscarAlunosPaginadosAsync(int pagina, int quantidade)
         {
             try
             {
-                string sql = @"SELECT * FROM Alunos ORDER BY AlunoID 
-                       OFFSET @Offset ROWS FETCH NEXT @Quantidade ROWS ONLY";
+                string sql = @"
+        SELECT 
+            a.AlunoID,
+            a.Nome,
+            a.Idade,
+            a.Email,
+            a.DataMatricula,
+            c.CursoID,
+            COALESCE(c.Nome, 'Curso sem nome') AS Nome,
+            c.Descricao,
+            c.CargaHoraria
+        FROM 
+            Alunos a
+        LEFT JOIN 
+            Matriculas m ON a.AlunoID = m.AlunoID
+        LEFT JOIN 
+            Cursos c ON m.CursoID = c.CursoID
+        ORDER BY a.AlunoID
+        OFFSET @Offset ROWS FETCH NEXT @Quantidade ROWS ONLY;";
 
-                string countSql = @"SELECT COUNT(*) FROM Alunos";
+                string countSql = "SELECT COUNT(*) FROM Alunos";
 
                 var parametros = new
                 {
@@ -99,10 +210,33 @@ namespace GerenciamentoCursos.Infra.Repositories
                     Quantidade = quantidade
                 };
 
-                var alunos = await _connection.QueryAsync<Aluno>(sql, parametros);
+                var alunoDicionario = new Dictionary<int, Aluno>();
+
+                var alunos = await _connection.QueryAsync<Aluno, Curso, Aluno>(
+                    sql,
+                    (aluno, curso) =>
+                    {
+                        if (!alunoDicionario.TryGetValue(aluno.AlunoID, out var alunoExistente))
+                        {
+                            alunoExistente = aluno;
+                            alunoExistente.Cursos = new List<Curso>();
+                            alunoDicionario.Add(aluno.AlunoID, alunoExistente);
+                        }
+
+                        if (curso != null && curso.CursoID > 0)
+                        {
+                            alunoExistente.Cursos.Add(curso);
+                        }
+
+                        return alunoExistente;
+                    },
+                    parametros,
+                    splitOn: "CursoID"
+                );
+
                 var totalRegistros = await _connection.ExecuteScalarAsync<int>(countSql);
 
-                return new RetornoPaginado<Aluno>(alunos.ToList(), totalRegistros, pagina, quantidade);
+                return new RetornoPaginado<Aluno>(alunoDicionario.Values.ToList(), totalRegistros, pagina, quantidade);
             }
             catch (Exception ex)
             {
@@ -112,22 +246,20 @@ namespace GerenciamentoCursos.Infra.Repositories
 
 
 
-
         public async Task<bool> AtualizarAlunoAsync(int id, Aluno aluno)
         {
             try
             {
                 string sql = @"UPDATE Alunos 
-                               SET Nome = @Nome, Idade = @Idade, Email = @Email, DataMatricula = @DataMatricula
-                               WHERE AlunoID = @AlunoID";
+                       SET Nome = @Nome, Idade = @Idade, Email = @Email
+                       WHERE AlunoID = @AlunoID";
 
                 var parametros = new
                 {
-                    AlunoID = id,
                     Nome = aluno.Nome,
                     Idade = aluno.Idade,
                     Email = aluno.Email,
-                    DataMatricula = aluno.DataMatricula
+                    AlunoID = id
                 };
 
                 var linhasAfetadas = await _connection.ExecuteAsync(sql, parametros);
@@ -138,5 +270,6 @@ namespace GerenciamentoCursos.Infra.Repositories
                 throw new Exception("Erro ao atualizar aluno.", ex);
             }
         }
+
     }
 }

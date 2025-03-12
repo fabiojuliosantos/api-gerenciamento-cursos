@@ -1,8 +1,8 @@
 ﻿using GerenciamentoCursos.Domain;
 
-namespace GerenciamentoCursos.Services.Interface
+namespace GerenciamentoCursos.Infra.Interfaces
 {
-    public interface IMatriculaService
+    public interface IMatriculaRepository
     {
         Task<RetornoPaginado<Matricula>> BuscarMatriculasPaginadasAsync(int pagina, int quantidade);
         Task<bool> CriarMatriculaAsync(Matricula matricula);

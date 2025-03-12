@@ -1,4 +1,6 @@
-﻿using GerenciamentoCursos.Domain;
+﻿using AutoMapper;
+using GerenciamentoCursos.Domain;
+using GerenciamentoCursos.Dto;
 using GerenciamentoCursos.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,24 +11,41 @@ namespace GerenciamentoCursos.API.Controllers
     public class AlunoController : ControllerBase
     {
         private readonly IAlunoService _service;
+        private readonly IMapper _mapper;
 
-        public AlunoController(IAlunoService service)
+        public AlunoController(IAlunoService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         [HttpPost("api/alunos")]
-        public async Task<IActionResult> CriarAluno([FromBody] Aluno aluno)
+        public async Task<IActionResult> CriarAluno([FromBody] AlunoDto alunoDto)
         {
-            if (aluno == null)
+            if (alunoDto == null)
                 return BadRequest("Dados inválidos.");
+
+            var aluno = _mapper.Map<Aluno>(alunoDto);
+
+            if (aluno.DataMatricula == DateTime.MinValue)
+            {
+                aluno.DataMatricula = DateTime.UtcNow;
+            }
 
             var resultado = await _service.CriarAlunoAsync(aluno);
             if (resultado)
-                return CreatedAtAction(nameof(BuscarAlunoPorId), new { id = aluno.AlunoID }, aluno);
+                return CreatedAtAction(nameof(CriarAluno), new { id = aluno.AlunoID }, aluno);
 
             return BadRequest("Erro ao criar aluno.");
         }
+
+        [HttpGet("/api/alunos")]
+        public async Task<IActionResult> BuscarTodosAlunos()
+        {
+            var alunos = await _service.BuscarTodosAlunosAsync();
+            return Ok(alunos);
+        }
+
 
         [HttpGet("/api/alunos/{id}")]
         public async Task<IActionResult> BuscarAlunoPorId(int id)
@@ -38,15 +57,9 @@ namespace GerenciamentoCursos.API.Controllers
             return Ok(aluno);
         }
 
-        [HttpGet("/api/alunos")]
-        public async Task<IActionResult> BuscarTodosAlunos()
-        {
-            var alunos = await _service.BuscarTodosAlunosAsync();
-            return Ok(alunos);
-        }
 
         [HttpGet("/api/alunos/{pagina}/{quantidade}")]
-        public async Task<IActionResult> BuscarAlunosPaginados([FromQuery] int pagina = 1, [FromQuery] int quantidade = 10)
+        public async Task<IActionResult> BuscarAlunosPaginados(int pagina = 1, int quantidade = 10)
         {
             if (pagina < 1 || quantidade < 1)
                 return BadRequest("Os parâmetros de paginação devem ser maiores que zero.");
@@ -55,15 +68,20 @@ namespace GerenciamentoCursos.API.Controllers
             return Ok(resultado);
         }
 
+
         [HttpPut("/api/alunos/{id}")]
-        public async Task<IActionResult> AtualizarAluno(int id, [FromBody] Aluno aluno)
+        public async Task<IActionResult> AtualizarAluno(int id, [FromBody] AlunoDto alunoDto)
         {
+            var aluno = _mapper.Map<Aluno>(alunoDto);
+
             if (aluno == null)
                 return BadRequest("Dados inválidos.");
 
             var atualizado = await _service.AtualizarAlunoAsync(id, aluno);
             if (atualizado)
-                return NoContent();
+            {
+                return Ok(new { mensagem = "Aluno alterado com sucesso." });
+            }
 
             return NotFound("Aluno não encontrado.");
         }
@@ -73,9 +91,12 @@ namespace GerenciamentoCursos.API.Controllers
         {
             var excluido = await _service.ExcluirAlunoAsync(id);
             if (excluido)
-                return NoContent();
+            {
+                return Ok(new { mensagem = "Aluno excluído com sucesso." });
+            }
 
             return NotFound("Aluno não encontrado.");
         }
+
     }
 }
