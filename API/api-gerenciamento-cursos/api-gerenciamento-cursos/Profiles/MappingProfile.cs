@@ -9,7 +9,7 @@ namespace api_gerenciamento_cursos.Profiles
         public MappingProfile()
         {
             CreateMap<AlunoDto, Aluno>().ReverseMap();
-            CreateMap<CursoDto, Cursos>().ReverseMap();
+            CreateMap<Cursos, CursoDto>().ReverseMap();
             CreateMap<MatriculaDto, Matriculas>().ReverseMap();
         }
     }

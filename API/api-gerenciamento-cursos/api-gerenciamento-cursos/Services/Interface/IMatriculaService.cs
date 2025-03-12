@@ -6,7 +6,7 @@ namespace api_gerenciamento_cursos.Services.Interface
     public interface IMatriculaService
     {
         Task<RetornoPaginado<Matriculas>> ListarMatriculasPaginadoAsync(int pagina, int qtdPorPagina);
-        Task<bool> AdicionarMatriculaAsync(MatriculaDto matriculas);
-        Task<bool> AtualizarMatriculaAsync(MatriculaDto matriculas);
+        Task<bool> AdicionarMatriculaAsync(Matriculas matriculas);
+        Task<bool> AtualizarMatriculaAsync(Matriculas matriculas);
     }
 }

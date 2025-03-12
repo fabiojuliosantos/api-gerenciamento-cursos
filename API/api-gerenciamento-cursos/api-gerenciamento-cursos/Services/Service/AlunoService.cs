@@ -28,7 +28,7 @@ namespace api_gerenciamento_cursos.Services.Service
             return await _alunosRepository.AdicionaAlunoAsync(aluno);
         }
 
-        public async Task<Aluno> BuscaAlunoPorIdAsync(int id)
+        public async Task<AlunoComCurso> BuscaAlunoPorIdAsync(int id)
         {
             return await _alunosRepository.BuscaAlunoPorIdAsync(id);
         }

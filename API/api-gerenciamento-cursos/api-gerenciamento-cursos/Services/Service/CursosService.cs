@@ -1,33 +1,44 @@
 ﻿using api_gerenciamento_cursos.Domain;
+using api_gerenciamento_cursos.Infra.Interfaces;
 using api_gerenciamento_cursos.Services.Interface;
+using AutoMapper;
 
 namespace api_gerenciamento_cursos.Services.Service
 {
     public class CursosService : ICursosService
     {
-        public Task<bool> AdicionaCursosAsync(Cursos cursos)
+        private readonly ICursosRepository _cursosRepository;
+        private readonly IMapper _mapper;
+
+        public CursosService(ICursosRepository cursosRepository, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _cursosRepository = cursosRepository;
+            _mapper = mapper;
         }
 
-        public Task<bool> AtualizarCursosAsync(Cursos cursos)
+        public async Task<bool> AdicionaCursosAsync(Cursos cursos)
         {
-            throw new NotImplementedException();
+            return await _cursosRepository.AdicionaCursosAsync(cursos);
         }
 
-        public Task<bool> DeletaCursosAsync(int id)
+        public async Task<bool> AtualizarCursosAsync(Cursos cursos)
         {
-            throw new NotImplementedException();
+            return await _cursosRepository.AtualizarCursosAsync(cursos);
         }
 
-        public Task<IEnumerable<Cursos>> RecuperaCursosAsync()
+        public async Task<bool> DeletaCursosAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _cursosRepository.DeletaCursosAsync(id);
         }
 
-        public Task<Cursos> RecuperaCursosPorIdAsync(int id)
+        public async Task<IEnumerable<Cursos>> RecuperaCursosAsync()
         {
-            throw new NotImplementedException();
+            return await _cursosRepository.RecuperaCursosAsync();
+        }
+
+        public async Task<Cursos> RecuperaCursosPorIdAsync(int id)
+        {
+            return await _cursosRepository.RecuperaCursosPorIdAsync(id);
         }
     }
 }

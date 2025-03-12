@@ -51,7 +51,7 @@ namespace api_gerenciamento_cursos.Infra.Repositories
                     Nome = aluno.Nome,
                     Idade = aluno.Idade,
                     Email = aluno.Email,
-                    Id = aluno.AlunoID 
+                    Id = aluno.AlunoID
                 };
 
                 var resultado = await _connection.ExecuteAsync(sql, parametros);
@@ -59,17 +59,30 @@ namespace api_gerenciamento_cursos.Infra.Repositories
             }
             catch (Exception ex)
             {
-                throw; 
+                throw;
             }
         }
 
-        public async Task<Aluno> BuscaAlunoPorIdAsync(int id)
+        public async Task<AlunoComCurso> BuscaAlunoPorIdAsync(int id)
         {
             try
             {
-                string sql = "SELECT * FROM Alunos WHERE AlunoID = @Id";
-                var aluno = await _connection.QueryFirstOrDefaultAsync<Aluno>(sql, new { Id = id });
-                return aluno;
+                string sql = @"
+            SELECT 
+            a.AlunoID, 
+            a.Nome, 
+            a.Idade, 
+            a.Email, 
+            a.DataMatricula, 
+            c.CursoID, 
+            c.Nome AS NomeCurso
+            FROM Alunos a
+            INNER JOIN Matriculas m ON a.AlunoID = m.AlunoID
+            INNER JOIN Cursos c ON m.CursoID = c.CursoID
+            WHERE a.AlunoID = @Id";
+
+                var alunoComCurso = await _connection.QueryFirstOrDefaultAsync<AlunoComCurso>(sql, new { Id = id });
+                return alunoComCurso;
             }
             catch (Exception)
             {
@@ -123,10 +136,13 @@ namespace api_gerenciamento_cursos.Infra.Repositories
 
         public async Task<IEnumerable<Aluno>> RecuperaTodosAlunosAsync()
         {
-            try { 
-            string sql = "SELECT * FROM ALUNOS";
-            var alunos = await _connection.QueryAsync<Aluno>(sql);
-            return alunos;
+            try
+            {
+                string sql = "SELECT * FROM ALUNOS";
+                var alunos = await _connection.QueryAsync<Aluno>(sql);
+                var sqlCursoInAluno = @"SELECT * FROM MATRICULAS WHERE ALUNOID=@ALUNOID";
+
+                return alunos;
             }
             catch (Exception)
             {

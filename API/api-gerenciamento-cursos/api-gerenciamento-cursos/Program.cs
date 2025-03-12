@@ -18,14 +18,20 @@ builder.Services.AddScoped<IDbConnection>(provider =>
     return connection;
 });
 
+builder.Services.AddScoped<IDbConnection>(provider =>
+    new SqlConnection(connectionString)
+);
+
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(connectionString));
 
 #region Services
 builder.Services.AddScoped<IAlunoService, AlunoService>();
+builder.Services.AddScoped<ICursosService, CursosService>();
 #endregion
 
 #region Repository
 builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
+builder.Services.AddScoped<ICursosRepository, CursosRepository>();
 #endregion
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
