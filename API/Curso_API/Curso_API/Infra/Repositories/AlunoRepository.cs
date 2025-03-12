@@ -61,9 +61,9 @@ public class AlunoRepository : IAlunoRepository
         {
             string sql = $"SELECT TOP 1 * FROM Alunos WHERE AlunoID = {alunoID}";
             var aluno = await _connection.QueryFirstOrDefaultAsync<Aluno>(sql);
-            string cursoSql = $"SELECT C.CursoID,C.Nome FROM Cursos C INNER JOIN Matriculas M ON C.CursoID = M.CursoID WHERE M.AlunoID = {aluno.AlunoID}";
+            string cursoSql = $"SELECT C.CursoID,C.Nome FROM Cursos C INNER JOIN Matriculas M ON C.CursoID = M.CursoID WHERE M.AlunoID = {alunoID}";
             var cursos = await _connection.QueryAsync<ReadCursoDto>(cursoSql);
-            aluno.Cursos = cursos.ToList();
+            if (aluno.Cursos == null) { aluno.Cursos = cursos.ToList(); }
             return aluno;
         }
         catch (Exception e) { throw e; }
@@ -84,7 +84,8 @@ public class AlunoRepository : IAlunoRepository
             {
                 string cursoSql = $"SELECT C.CursoID,C.Nome FROM Cursos C INNER JOIN Matriculas M ON C.CursoID = M.CursoID WHERE M.AlunoID = {aluno.AlunoID}";
                 var cursos = await _connection.QueryAsync<ReadCursoDto>(cursoSql);
-                aluno.Cursos = cursos.ToList();
+                if (aluno.Cursos == null) { aluno.Cursos = cursos.ToList(); }
+
             }
             string sqlQuantidadeAluno = "SELECT COUNT(*) FROM Alunos";
             var quantidadeAlunos = await _connection.QueryFirstOrDefaultAsync<int>(sqlQuantidadeAluno);
@@ -109,7 +110,7 @@ public class AlunoRepository : IAlunoRepository
             {
                 string cursoSql = $"SELECT C.CursoID,C.Nome FROM Cursos C INNER JOIN Matriculas M ON C.CursoID = M.CursoID WHERE M.AlunoID = {aluno.AlunoID}";
                 var cursos = await _connection.QueryAsync<ReadCursoDto>(cursoSql);
-                aluno.Cursos = cursos.ToList();
+                if (aluno.Cursos == null) { aluno.Cursos = cursos.ToList(); }
             }
             return alunos.ToList();
         }
