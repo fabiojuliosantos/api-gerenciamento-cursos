@@ -41,7 +41,7 @@ namespace api_gerenciamento_cursos.Services.Service
             return await _alunosRepository.DeletarAlunoAsync(id);
         }
 
-        public async Task<IEnumerable<Aluno>> RecuperaTodosAlunosAsync()
+        public async Task<IEnumerable<AlunoComCurso>> RecuperaTodosAlunosAsync()
         {
             return await _alunosRepository.RecuperaTodosAlunosAsync();
         }

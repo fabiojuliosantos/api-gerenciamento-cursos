@@ -141,13 +141,45 @@ namespace api_gerenciamento_cursos.Infra.Repositories
             catch (Exception ex) { throw; }
         }
 
-        public async Task<IEnumerable<Aluno>> RecuperaTodosAlunosAsync()
+        public async Task<IEnumerable<AlunoComCurso>> RecuperaTodosAlunosAsync()
         {
             try
             {
-                string sql = "SELECT * FROM ALUNOS";
-                var alunos = await _connection.QueryAsync<Aluno>(sql);
-                var sqlCursoInAluno = @"SELECT * FROM MATRICULAS WHERE ALUNOID=@ALUNOID";
+                string sql = @"
+        SELECT 
+        a.AlunoID, 
+        a.Nome, 
+        a.Idade, 
+        a.Email, 
+        a.DataMatricula, 
+        c.CursoID, 
+        c.Nome AS NomeCurso
+        FROM Alunos a
+        LEFT JOIN Matriculas m ON a.AlunoID = m.AlunoID
+        LEFT JOIN Cursos c ON m.CursoID = c.CursoID";
+
+                var alunos = new List<AlunoComCurso>();
+                var resultado = await _connection.QueryAsync<AlunoComCurso, CursoInfo, AlunoComCurso>(
+                    sql,
+                    (aluno, curso) =>
+                    {
+                        var alunoExistente = alunos.FirstOrDefault(a => a.AlunoID == aluno.AlunoID);
+
+                        if (alunoExistente == null)
+                        {
+                            aluno.Cursos = new List<CursoInfo>();
+                            alunos.Add(alunoExistente = aluno);
+                        }
+
+                        if (curso != null)
+                        {
+                            alunoExistente.Cursos.Add(curso);
+                        }
+
+                        return alunoExistente;
+                    },
+                    splitOn: "CursoID"
+                );
 
                 return alunos;
             }

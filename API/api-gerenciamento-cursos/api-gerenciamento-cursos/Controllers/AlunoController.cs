@@ -44,16 +44,17 @@ namespace api_gerenciamento_cursos.Controllers
         {
             var alunos = await _alunoService.RecuperaTodosAlunosAsync();
 
-            var alunosDto = alunos.Select(aluno => new ReadAlunoDto
+            var alunosComCurso = alunos.Select(aluno => new AlunoComCurso
             {
                 AlunoID = aluno.AlunoID,
                 Nome = aluno.Nome,
                 Idade = aluno.Idade,
                 Email = aluno.Email,
-                DataMatricula = aluno.DataMatricula
+                DataMatricula = aluno.DataMatricula,
+                Cursos = aluno.Cursos
             });
 
-            return Ok(alunosDto);
+            return Ok(alunosComCurso);
         }
 
         [HttpPut("{id}")]
