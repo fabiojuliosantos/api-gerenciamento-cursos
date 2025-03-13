@@ -15,8 +15,4 @@ public class Matricula
     public int CursoId { get; set; }
     [Required(ErrorMessage = "Data de matricula é obrigatorio.")]
     public DateTime DataMatricula { get; set; }
-    [ForeignKey("AlunoID")]
-    public Alunos alunos { get; set; }
-    [ForeignKey("CursoID")]
-    public Cursos cursos { get; set; }
 }

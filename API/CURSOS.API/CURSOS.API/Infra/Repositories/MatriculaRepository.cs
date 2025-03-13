@@ -42,13 +42,13 @@ public class MatriculaRepository : IMatriculaRepository
         try
         {
             string sql = "SELECT * FROM MATRICULAS " +
-                "ORDER BY MATRICULAID" +
-                "OFFSET @OFFSET ROWS FETCH NEXT @FETCH ROWS ONLY";
+                "ORDER BY MATRICULAID " +
+                "OFFSET @OFFSET ROWS FETCH NEXT @QUANTIDADE ROWS ONLY";
 
             var parametros = new
             {
                 OFFSET = (pagina - 1) * quantidade,
-                FETCH = quantidade
+                QUANTIDADE = quantidade
             };
 
             var resultado = await _MatriculaRepository.QueryAsync<Matricula>(sql, parametros);
