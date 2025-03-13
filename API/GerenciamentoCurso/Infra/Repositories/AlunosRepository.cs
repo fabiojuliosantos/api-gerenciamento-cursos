@@ -2,9 +2,7 @@
 using AutoMapper;
 using Dapper;
 using GerenciamentoCurso.Domain;
-using GerenciamentoCurso.Dto;
 using GerenciamentoCurso.Infra.Interface;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace GerenciamentoCurso.Infra.Repositories;
 
@@ -115,8 +113,6 @@ public class AlunosRepository : IAlunoRepository
                 IDADE = alunos.Idade,
                 EMAIL = alunos.Email,
                 DATAMATRICULA = DateTime.Now
-
-
             };
 
             var resultado = await _conn.ExecuteAsync(sql, parametros);
@@ -201,9 +197,10 @@ public class AlunosRepository : IAlunoRepository
     {
         try
         {
-            var aluno = new Alunos();
-
-            string sql = "SELECT * FROM ALUNOS ORDER BY ALUNOID OFFSET @OFFSET ROWS FETCH NEXT @QUANTIDADE ROWS ONLY";
+            string sql = @"SELECT * FROM ALUNOS 
+                       ORDER BY ALUNOID 
+                       OFFSET @OFFSET ROWS 
+                       FETCH NEXT @QUANTIDADE ROWS ONLY";
 
             var parametros = new
             {
@@ -213,8 +210,21 @@ public class AlunosRepository : IAlunoRepository
 
             var alunos = await _conn.QueryAsync<Alunos>(sql, parametros);
 
-            var totalAlunos = "SELECT COUNT(*) FROM ALUNOS";
+            
+            foreach (var estudante in alunos)
+            {
+                string sql2 = @"SELECT c.* 
+                            FROM matriculas M 
+                            INNER JOIN cursos c ON M.CURSOID = C.CURSOID 
+                            WHERE M.ALUNOID = @AlunoId"; 
 
+                var parametrosCurso = new { AlunoId = estudante.AlunoId };
+                var cursos = await _conn.QueryAsync<Cursos>(sql2, parametrosCurso);
+
+                estudante.CursoMatriculado = cursos.ToList();
+            }
+
+            var totalAlunos = "SELECT COUNT(*) FROM ALUNOS";
             var retornoTotalAlunos = await _conn.ExecuteScalarAsync<int>(totalAlunos);
 
             var retornoPaginado = new RetornoPaginadoAlunos<Alunos>
@@ -227,7 +237,7 @@ public class AlunosRepository : IAlunoRepository
 
             return retornoPaginado;
         }
-        catch (Exception ex) { throw; }
+        catch (Exception ex) { throw; } // Considere tratar/logar a exceção
     }
 }
 

@@ -25,36 +25,84 @@ public class AlunoService : IAlunoService
 
     public async Task<bool> AtualizarAlunoAsync( Alunos aluno)
     {
-      
-        return await _repository.AtualizarAlunoAsync(aluno);
+
+        try
+        {
+            return await _repository.AtualizarAlunoAsync(aluno);
+        }
+        catch (Exception )
+        {
+
+            throw;
+        }
        
     }
     public async Task<bool> AdicionaAlunoAsync(Alunos aluno)
     {
-        return await _repository.AdicionaAlunoAsync(aluno);
+        try
+        {
+            return await _repository.AdicionaAlunoAsync(aluno);
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
     }
 
     public async Task<AlunoComCurso> BuscaAlunoPorIdAsync(int id)
     {
-        return await _repository.BuscaAlunoPorIdAsync(id);
+        try
+        {
+            return await _repository.BuscaAlunoPorIdAsync(id);
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
     }
 
     public async Task<RetornoPaginadoAlunos<Alunos>> BuscarAlunoPorPaginaAsync(int pagina, int quantidade)
     {
-        return await _repository.BuscaAlunoPorPagina(pagina, quantidade);
+        try
+        {
+            return await _repository.BuscaAlunoPorPagina(pagina, quantidade);
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
     }
 
     public async Task<bool> DeletarAlunoAsync(int id)
     {
-       
-           return  await _repository.DeletarAlunoAsync(id);
+
+        try
+        {
+            return await _repository.DeletarAlunoAsync(id);
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
         
        
     }
 
     public async Task<IEnumerable<AlunoComCurso>> RecuperaTodosAlunosAsync()
     {
-        return await _repository.RecuperaTodosAlunosAsync();
+        try
+        {
+            return await _repository.RecuperaTodosAlunosAsync();
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
     }
 }
 
