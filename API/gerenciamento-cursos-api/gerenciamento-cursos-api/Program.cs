@@ -1,5 +1,9 @@
 using System.Data;
 using gerenciamento_cursos_api.Infra.Context;
+using gerenciamento_cursos_api.Infra.Interfaces;
+using gerenciamento_cursos_api.Infra.Repositories;
+using gerenciamento_cursos_api.Services.Interface;
+using gerenciamento_cursos_api.Services.Services;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +28,15 @@ builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(connectionSt
 #region Injeção de dependências
 
 #region Services
+builder.Services.AddScoped<IAlunoService, AlunoService>();
+builder.Services.AddScoped<IMatriculaService, MatriculaService>();
+builder.Services.AddScoped<ICursoService, CursoService>();
+#endregion
 
+#region Repositories
+builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
+builder.Services.AddScoped<IMatriculaRepository, MatriculaRepository>();
+builder.Services.AddScoped<ICursoRepository, CursoRepository>();
 #endregion
 
 #endregion

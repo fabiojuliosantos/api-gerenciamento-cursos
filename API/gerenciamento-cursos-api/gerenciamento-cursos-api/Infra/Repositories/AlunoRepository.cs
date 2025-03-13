@@ -24,7 +24,8 @@ public class AlunoRepository : IAlunoRepository
             {
                 NOME = aluno.Nome,
                 IDADE = aluno.Idade,
-                EMAIL = aluno.Email
+                EMAIL = aluno.Email,
+                ID = aluno.AlunoID
             };
 
             var alunoAtualizado = await _connection.ExecuteAsync(sql, parametros);
@@ -38,8 +39,16 @@ public class AlunoRepository : IAlunoRepository
     {
         try
         {
-            string sql = $"SELECT TOP 1 * FROM ALUNOS WHERE ALUNOID = {id}";
+            var sql = $"SELECT TOP 1 * FROM ALUNOS WHERE ALUNOID = {id}";
+
             var aluno = await _connection.QueryFirstOrDefaultAsync<Aluno>(sql);
+
+            var sql2 = $"SELECT * FROM MATRICULAS M INNER JOIN CURSOS C ON M.CURSOID=C.CURSOID WHERE ALUNOID={aluno.AlunoID}";
+
+            var curso = await _connection.QueryAsync<Curso>(sql2);
+
+            aluno.Cursos = curso.ToList();
+
             return aluno;
         }
         catch (Exception ex) { throw; }
@@ -60,6 +69,15 @@ public class AlunoRepository : IAlunoRepository
             };
 
             var alunos = await _connection.QueryAsync<Aluno>(sql, parametros);
+
+            foreach (var aluno in alunos)
+            {
+                var sql2 = $"SELECT * FROM MATRICULAS M INNER JOIN CURSOS C ON M.CURSOID=C.CURSOID WHERE ALUNOID={aluno.AlunoID}";
+
+                var curso = await _connection.QueryAsync<Curso>(sql2);
+
+                aluno.Cursos = curso.ToList();
+            }
 
             var totalAlunos = "SELECT COUNT(*) FROM ALUNOS";
 
@@ -98,6 +116,15 @@ public class AlunoRepository : IAlunoRepository
             string sql = "SELECT * FROM ALUNOS";
             var alunos = await _connection.QueryAsync<Aluno>(sql);
 
+            foreach (var aluno in alunos)
+            {
+                var sql3 = $"SELECT * FROM MATRICULAS M INNER JOIN CURSOS C ON M.CURSOID=C.CURSOID WHERE ALUNOID={aluno.AlunoID}";
+
+                var curso = await _connection.QueryAsync<Curso>(sql3);
+
+                aluno.Cursos = curso.ToList();
+            }
+
             return alunos.ToList();
         }
         catch (Exception ex) { throw; }
@@ -107,11 +134,19 @@ public class AlunoRepository : IAlunoRepository
     {
         try
         {
-            string sql = $"DELETE FROM ALUNOS WHERE ALUNOSID={id}";
+            string sql = $"DELETE FROM MATRICULAS WHERE ALUNOID={id}";
 
-            var alunoExcluido = await _connection.ExecuteAsync(sql);
+            var matriculaExcluida = await _connection.ExecuteAsync(sql);
+            if(matriculaExcluida > 0)
+            {
+                string sql2 = $"DELETE FROM ALUNOS WHERE ALUNOID={id}";
 
-            return alunoExcluido > 0 ? true : false;
+                var alunoExcluido = await _connection.ExecuteAsync(sql2);
+
+                return alunoExcluido > 0 ? true : false;
+            }
+            return false;
+            
         }
         catch (Exception ex) { throw; }
     }
@@ -120,13 +155,19 @@ public class AlunoRepository : IAlunoRepository
     {
         try
         {
-            string sql = $"INSERT INTO ALUNOS VALUES (@NOME, @IDADE, @EMAIL)";
+            Validacoes validacao = new(new AlunoRepository(_connection));
+
+            if (!validacao.ValidaEmail(aluno.Email))
+                throw new Exception("Email inserido inválido!");
+
+            string sql = $"INSERT INTO ALUNOS VALUES (@NOME, @IDADE, @EMAIL, @DATAMATRICULA)";
 
             var parametros = new
             {
                 NOME = aluno.Nome,
                 IDADE = aluno.Idade,
-                EMAIL = aluno.Email
+                EMAIL = aluno.Email,
+                DATAMATRICULA = DateTime.Now
             };
 
             var alunoCadastrado = await _connection.ExecuteAsync(sql, parametros);

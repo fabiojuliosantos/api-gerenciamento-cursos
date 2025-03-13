@@ -74,12 +74,13 @@ public class MatriculaRepository : IMatriculaRepository
     {
         try
         {
-            string sql = $"INSERT INTO MATRICULAS VALUES (@ALUNOID, @CURSOID)";
+            string sql = $"INSERT INTO MATRICULAS VALUES (@ALUNOID, @CURSOID, @DATAMATRICULA)";
 
             var parametros = new
             {
                 ALUNOID = matricula.AlunoID,
-                CURSOID = matricula.CursoID
+                CURSOID = matricula.CursoID,
+                DATAMATRICULA = DateTime.Now
             };
 
             var matriculaAluno = await _connection.ExecuteAsync(sql, parametros);

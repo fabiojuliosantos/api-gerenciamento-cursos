@@ -23,7 +23,8 @@ public class CursoRepository : ICursoRepository
             var parametros = new
             {
                 NOME = curso.Nome,
-                DESCRICAO = curso.Descricao
+                DESCRICAO = curso.Descricao,
+                ID = curso.CursoID
             };
 
             var cursoAtualizado = await _connection.ExecuteAsync(sql, parametros);
@@ -103,12 +104,13 @@ public class CursoRepository : ICursoRepository
     {
         try
         {
-            string sql = $"INSERT INTO CURSOS VALUES (@NOME, @DESCRICAO)";
+            string sql = $"INSERT INTO CURSOS VALUES (@NOME, @DESCRICAO, @CARGAHORARIA)";
 
             var parametros = new
             {
                 NOME = curso.Nome,
                 DESCRICAO = curso.Descricao,
+                CARGAHORARIA = curso.CargaHoraria
             };
 
             var cursoCadastrado = await _connection.ExecuteAsync(sql, parametros);
@@ -122,11 +124,19 @@ public class CursoRepository : ICursoRepository
     {
         try
         {
-            string sql = $"DELETE FROM CURSOS WHERE CURSOID={id}";
+            string sql = $"DELETE FROM MATRICULAS WHERE CURSOID={id}";
 
-            var cursoExcluido = await _connection.ExecuteAsync(sql);
+            var matriculaExcluida = await _connection.ExecuteAsync(sql);
 
-            return cursoExcluido > 0 ? true : false;
+            if(matriculaExcluida > 0)
+            {
+                string sql2 = $"DELETE FROM CURSOS WHERE CURSOID={id}";
+
+                var cursoExcluido = await _connection.ExecuteAsync(sql2);
+
+                return cursoExcluido > 0 ? true : false;
+            }
+            return false;
         }
         catch (Exception ex) { throw; }
     }
