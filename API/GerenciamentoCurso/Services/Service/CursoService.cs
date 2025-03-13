@@ -42,7 +42,7 @@ namespace GerenciamentoCurso.Services.Service
             return await _repository.RetornoCursoId(id);
         }
 
-        public async Task<RetornoPaginado<Cursos>> RetornoPaginadoCurso(int pagina, int quantidade)
+        public async Task<RetornoPaginadoAlunos<Cursos>> RetornoPaginadoCurso(int pagina, int quantidade)
         {
             return await _repository.RetornoPaginadoCurso(pagina,quantidade);
         }

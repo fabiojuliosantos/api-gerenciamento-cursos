@@ -2,9 +2,11 @@
 using FluentValidation;
 using GerenciamentoCurso.Domain;
 using GerenciamentoCurso.Dto;
+using GerenciamentoCurso.Infra.Context;
 using GerenciamentoCurso.Infra.Interface;
 using GerenciamentoCurso.Infra.Repositories;
 using GerenciamentoCurso.Services.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace GerenciamentoCurso.Services.Service;
 
@@ -12,16 +14,20 @@ public class AlunoService : IAlunoService
 {
     private readonly IAlunoRepository _repository;
     private readonly IMapper _mapper;
+    private readonly AppDbContext _context;
 
-    public AlunoService(IAlunoRepository repository, IMapper mapper)
+    public AlunoService(IAlunoRepository repository, IMapper mapper, AppDbContext context)
     {
         _repository = repository;
         _mapper = mapper;
+        _context = context;
     }
 
-    public async Task<bool> AtualizarAlunoAsync(Alunos aluno)
+    public async Task<bool> AtualizarAlunoAsync( Alunos aluno)
     {
+      
         return await _repository.AtualizarAlunoAsync(aluno);
+       
     }
     public async Task<bool> AdicionaAlunoAsync(Alunos aluno)
     {
@@ -33,14 +39,17 @@ public class AlunoService : IAlunoService
         return await _repository.BuscaAlunoPorIdAsync(id);
     }
 
-    public async Task<RetornoPaginado<Alunos>> BuscarAlunoPorPaginaAsync(int pagina, int quantidade)
+    public async Task<RetornoPaginadoAlunos<Alunos>> BuscarAlunoPorPaginaAsync(int pagina, int quantidade)
     {
         return await _repository.BuscaAlunoPorPagina(pagina, quantidade);
     }
 
     public async Task<bool> DeletarAlunoAsync(int id)
     {
-        return await _repository.DeletarAlunoAsync(id);
+       
+           return  await _repository.DeletarAlunoAsync(id);
+        
+       
     }
 
     public async Task<IEnumerable<AlunoComCurso>> RecuperaTodosAlunosAsync()

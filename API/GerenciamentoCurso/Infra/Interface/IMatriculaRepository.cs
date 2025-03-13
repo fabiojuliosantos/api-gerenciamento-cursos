@@ -6,7 +6,7 @@ namespace GerenciamentoCurso.Infra.Interface
     {
         Task<bool> MatricularAluno(Matricula matricula);
         Task<bool> RemoverMatricula(int id);
-        Task<RetornoPaginado<Matricula>> RetornoPaginadoMatricula(int pagina, int quantidade);
+        Task<RetornoPaginadoAlunos<Matricula>> RetornoPaginadoMatricula(int pagina, int quantidade);
 
     }
 }

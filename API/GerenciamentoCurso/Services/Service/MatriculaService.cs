@@ -26,7 +26,7 @@ namespace GerenciamentoCurso.Services.Service
             return await _repository.RemoverMatricula(id);
         }
 
-        public async Task<RetornoPaginado<Matricula>> RetornoPaginadoMatricula(int pagina, int quantidade)
+        public async Task<RetornoPaginadoAlunos<Matricula>> RetornoPaginadoMatricula(int pagina, int quantidade)
         {
             return await _repository.RetornoPaginadoMatricula(pagina, quantidade);
         }

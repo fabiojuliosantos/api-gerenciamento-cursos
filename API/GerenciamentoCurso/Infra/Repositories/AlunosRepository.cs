@@ -24,14 +24,15 @@ public class AlunosRepository : IAlunoRepository
         try
         {
             string sql = @"UPDATE ALUNOS SET NOME = @NOME, EMAIL = @EMAIL, IDADE = @IDADE WHERE ALUNOID = @Id";
-            var parametros = new {
+            var parametros = new
+            {
 
                 alunos.AlunoId,
                 alunos.Nome,
                 alunos.Email,
                 alunos.Idade,
                 Id = alunos.AlunoId
-                
+
             };
 
             var resultado = await _conn.ExecuteAsync(sql, parametros);
@@ -53,7 +54,7 @@ public class AlunosRepository : IAlunoRepository
             string sql = $"SELECT TOP 1 * FROM ALUNOS WHERE EMAIL={email}";
             var resultado = await _conn.QueryFirstOrDefault(sql);
 
-            return resultado;   
+            return resultado;
         }
         catch (Exception)
         {
@@ -62,8 +63,8 @@ public class AlunosRepository : IAlunoRepository
         }
     }
 
-  
-            public async Task<AlunoComCurso> BuscaAlunoPorIdAsync(int id)
+
+    public async Task<AlunoComCurso> BuscaAlunoPorIdAsync(int id)
     {
         try
         {
@@ -99,8 +100,8 @@ public class AlunosRepository : IAlunoRepository
     }
 
 
-        
-    
+
+
 
     public async Task<bool> AdicionaAlunoAsync(Alunos alunos)
     {
@@ -114,8 +115,8 @@ public class AlunosRepository : IAlunoRepository
                 IDADE = alunos.Idade,
                 EMAIL = alunos.Email,
                 DATAMATRICULA = DateTime.Now
-                
-           
+
+
             };
 
             var resultado = await _conn.ExecuteAsync(sql, parametros);
@@ -133,7 +134,7 @@ public class AlunosRepository : IAlunoRepository
     {
         try
         {
-            string sql = string.Format("DELETE FROM ALUNOS WHERE ALUNOID ={0}",id);
+            string sql = string.Format("DELETE FROM ALUNOS WHERE ALUNOID ={0}", id);
             var resultado = await _conn.ExecuteAsync(sql);
 
             return resultado > 0;
@@ -196,38 +197,38 @@ public class AlunosRepository : IAlunoRepository
 
 
 
-    public async Task<RetornoPaginado<Alunos>> BuscaAlunoPorPagina(int pagina, int quantidade)
+    public async Task<RetornoPaginadoAlunos<Alunos>> BuscaAlunoPorPagina(int pagina, int quantidade)
     {
         try
         {
-            string sql = "SELECT * FROM ALUNOS ORDER BY ALUNOID OFFSET @OFFSET ROWS FETCH NEXT @QUANTIDADE ROWS ONLY ";
+            var aluno = new Alunos();
+
+            string sql = "SELECT * FROM ALUNOS ORDER BY ALUNOID OFFSET @OFFSET ROWS FETCH NEXT @QUANTIDADE ROWS ONLY";
 
             var parametros = new
             {
                 OFFSET = (pagina - 1) * quantidade,
-
                 QUANTIDADE = quantidade
             };
 
             var alunos = await _conn.QueryAsync<Alunos>(sql, parametros);
 
-            var totalAlunos = "SELECT COUNT(*) FROM ALUNOS ";
+            var totalAlunos = "SELECT COUNT(*) FROM ALUNOS";
 
             var retornoTotalAlunos = await _conn.ExecuteScalarAsync<int>(totalAlunos);
 
-            return new RetornoPaginado<Alunos>()
+            var retornoPaginado = new RetornoPaginadoAlunos<Alunos>
             {
+                TotalRegistro = retornoTotalAlunos,
                 Pagina = pagina,
                 QtdPagina = quantidade,
-                TotalRegistro = retornoTotalAlunos,
                 Retorno = alunos.ToList()
-
             };
-        }
-        catch (Exception)
-        {
 
-            throw;
+            return retornoPaginado;
         }
+        catch (Exception ex) { throw; }
     }
 }
+
+

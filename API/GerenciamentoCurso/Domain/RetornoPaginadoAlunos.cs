@@ -1,9 +1,9 @@
 ﻿namespace GerenciamentoCurso.Domain;
 
-public class RetornoPaginado<T> where T : class
+public class RetornoPaginadoAlunos<Alunos> 
 {
     public int TotalRegistro { get; set; }
     public int Pagina { get; set; }
     public int QtdPagina { get; set; }
-    public List<T> ? Retorno { get; set; }
+    public List<Alunos> ? Retorno { get; set; }
 }

@@ -116,7 +116,7 @@ namespace GerenciamentoCurso.Infra.Repositories
             }
         }
 
-        public async Task<RetornoPaginado<Cursos>> RetornoPaginadoCurso(int pagina, int quantidade)
+        public async Task<RetornoPaginadoAlunos<Cursos>> RetornoPaginadoCurso(int pagina, int quantidade)
         {
             try
             {
@@ -135,7 +135,7 @@ namespace GerenciamentoCurso.Infra.Repositories
 
                 var retornoTotalCursos = await _conn.ExecuteScalarAsync<int>(totalCursos);
 
-                return new RetornoPaginado<Cursos>()
+                return new RetornoPaginadoAlunos<Cursos>()
                 {
                     Pagina = pagina,
                     QtdPagina = quantidade,

@@ -5,7 +5,7 @@ namespace GerenciamentoCurso.Infra.Interface;
 public interface ICursoRepository
 {
     Task<IEnumerable<Cursos>> ExibirCursos();
-    Task<RetornoPaginado<Cursos>> RetornoPaginadoCurso(int pagina, int quantidade);
+    Task<RetornoPaginadoAlunos<Cursos>> RetornoPaginadoCurso(int pagina, int quantidade);
     Task<Cursos> RetornoCursoId(int id);
     Task<bool> CriarCurso(Cursos cursos);
     Task<bool> AtualizarCurso(Cursos cursos);
