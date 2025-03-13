@@ -18,8 +18,9 @@ namespace GerenciamentoCursos.Infra.Repositories
         {
             try
             {
-                string sql = @"INSERT INTO Cursos (Nome, Descricao, CargaHoraria) 
-                               VALUES (@Nome, @Descricao, @CargaHoraria)";
+                string sql = @"INSERT INTO Cursos (Nome, Descricao, CargaHoraria)
+                       OUTPUT INSERTED.CursoID
+                       VALUES (@Nome, @Descricao, @CargaHoraria)";
 
                 var parametros = new
                 {
@@ -28,14 +29,22 @@ namespace GerenciamentoCursos.Infra.Repositories
                     CargaHoraria = curso.CargaHoraria
                 };
 
-                var cursoCadastrado = await _connection.ExecuteAsync(sql, parametros);
-                return cursoCadastrado > 0;
+                int cursoId = await _connection.QuerySingleAsync<int>(sql, parametros);
+
+                if (cursoId > 0)
+                {
+                    curso.CursoID = cursoId;
+                    return true;
+                }
+
+                return false;
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro ao criar curso.", ex);
             }
         }
+
 
         public async Task<bool> ExcluirCursoAsync(int id)
         {

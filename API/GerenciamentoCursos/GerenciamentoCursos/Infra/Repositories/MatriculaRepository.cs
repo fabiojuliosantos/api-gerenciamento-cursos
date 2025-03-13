@@ -52,8 +52,10 @@ namespace GerenciamentoCursos.Infra.Repositories
         {
             try
             {
-                string sql = @"INSERT INTO Matriculas (AlunoID, CursoID, DataMatricula) 
-                               VALUES (@AlunoID, @CursoID, @DataMatricula)";
+                string sql = @"
+            INSERT INTO Matriculas (AlunoID, CursoID, DataMatricula) 
+            OUTPUT INSERTED.MatriculaID
+            VALUES (@AlunoID, @CursoID, @DataMatricula)";
 
                 var parametros = new
                 {
@@ -62,14 +64,18 @@ namespace GerenciamentoCursos.Infra.Repositories
                     DataMatricula = matricula.DataMatricula
                 };
 
-                var matriculaCadastrada = await _connection.ExecuteAsync(sql, parametros);
-                return matriculaCadastrada > 0;
+                int matriculaId = await _connection.QuerySingleAsync<int>(sql, parametros);
+
+                matricula.MatriculaID = matriculaId;
+
+                return matriculaId > 0;
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro ao criar matrícula.", ex);
             }
         }
+
 
         public async Task<bool> ExcluirMatriculaAsync(int id)
         {

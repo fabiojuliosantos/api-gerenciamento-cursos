@@ -2,6 +2,7 @@
 using GerenciamentoCursos.Domain;
 using GerenciamentoCursos.Dto;
 using GerenciamentoCursos.Services.Interface;
+using GerenciamentoCursos.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GerenciamentoCursos.API.Controllers
@@ -30,6 +31,13 @@ namespace GerenciamentoCursos.API.Controllers
             if (aluno.DataMatricula == DateTime.MinValue)
             {
                 aluno.DataMatricula = DateTime.UtcNow;
+            }
+
+            var erros = Validacoes.ValidarAluno(aluno);
+
+            if (erros.Any())
+            {
+                return BadRequest(new { mensagensDeErro = erros });
             }
 
             var resultado = await _service.CriarAlunoAsync(aluno);
@@ -76,6 +84,13 @@ namespace GerenciamentoCursos.API.Controllers
 
             if (aluno == null)
                 return BadRequest("Dados inválidos.");
+
+            var erros = Validacoes.ValidarAluno(aluno);
+
+            if (erros.Any())
+            {
+                return BadRequest(new { mensagensDeErro = erros });
+            }
 
             var atualizado = await _service.AtualizarAlunoAsync(id, aluno);
             if (atualizado)

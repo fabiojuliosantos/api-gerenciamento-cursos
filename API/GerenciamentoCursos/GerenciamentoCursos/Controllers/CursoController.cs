@@ -2,6 +2,7 @@
 using GerenciamentoCursos.Domain;
 using GerenciamentoCursos.Dto;
 using GerenciamentoCursos.Services.Interface;
+using GerenciamentoCursos.Services.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,6 +28,13 @@ namespace GerenciamentoCursos.Controllers
                 return BadRequest("Dados inválidos.");
 
             var curso = _mapper.Map<Curso>(cursoDto);
+
+            var erros = Validacoes.ValidarCurso(curso);
+
+            if (erros.Any())
+            {
+                return BadRequest(new { mensagensDeErro = erros });
+            }
 
             var resultado = await _service.CriarCursoAsync(curso);
             if (resultado)
@@ -59,6 +67,13 @@ namespace GerenciamentoCursos.Controllers
 
             if (curso == null)
                 return BadRequest("Dados inválidos.");
+
+            var erros = Validacoes.ValidarCurso(curso);
+
+            if (erros.Any())
+            {
+                return BadRequest(new { mensagensDeErro = erros });
+            }
 
             var atualizado = await _service.AtualizarCursoAsync(id, curso);
             if (atualizado)
