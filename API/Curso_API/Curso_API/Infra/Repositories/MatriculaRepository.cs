@@ -18,12 +18,12 @@ public class MatriculaRepository : IMatriculaRepository
     {
         try
         {
-            string sql = "INSERT INTO Matriculas (@ALUNOID,@CURSOID,@DATAMATRICULA)";
+            string sql = "INSERT INTO Matriculas VALUES(@ALUNOID,@CURSOID,@DATAMATRICULA)";
             var parametros = new
             {
                 ALUNOID = matricula.AlunoID,
                 CURSOID = matricula.CursoID,
-                DATAMATRICULA = matricula.DataMatricula
+                DATAMATRICULA = DateTime.Now
             };
             var resposta = await _connection.ExecuteAsync(sql, parametros);
             return resposta > 0;
