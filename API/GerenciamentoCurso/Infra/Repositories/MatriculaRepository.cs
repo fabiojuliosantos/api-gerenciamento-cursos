@@ -45,7 +45,7 @@ namespace GerenciamentoCurso.Infra.Repositories
         {
             try
             {
-                string sql = string.Format("DELETE FROM MATRICULAS WHERE ALUNOID={0}", id);
+                string sql = string.Format($"DELETE FROM MATRICULAS WHERE MATRICULAID={id}");
                 var matriculaExcluida = await _conn.ExecuteAsync(sql);
                 return matriculaExcluida > 0;
             }
