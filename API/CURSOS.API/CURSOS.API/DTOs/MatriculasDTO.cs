@@ -5,6 +5,7 @@ namespace CURSOS.API.DTOs;
 
 public class MatriculasDTO
 {
+    [Required(ErrorMessage = "AlunoId é obrigatorio")]
     public int AlunoId { get; set; }
     [Required(ErrorMessage = "CursoId é obrigatorio")]
     public int CursoId { get; set; }

@@ -51,8 +51,8 @@ public class AlunosRepository : IAlunosRepository
     {
         try
         {
-            string sql = "UPDATE ALUNOS SET NOME = @NOME, IDADE = @IDADE, EMAIL = @EMAIL" +
-                "DATAMATRICULA = @DATAMATRICULA WHERE ALUNOID = @ALUNOID";
+            string sql = "UPDATE ALUNOS SET NOME = @NOME, IDADE = @IDADE, EMAIL = @EMAIL," +
+                " DATAMATRICULA = @DATAMATRICULA WHERE ALUNOID = @ALUNOID";
 
             var parametros = new
             {
