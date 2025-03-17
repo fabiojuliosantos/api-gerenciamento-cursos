@@ -55,7 +55,7 @@ namespace GerenciamentoCursos.Controllers
         {
             var curso = await _service.BuscarCursoPorIdAsync(id);
             if (curso == null)
-                return NotFound("Aluno não encontrado.");
+                return NotFound("Curso não encontrado.");
 
             return Ok(curso);
         }
@@ -93,7 +93,7 @@ namespace GerenciamentoCursos.Controllers
                 return Ok(new { mensagem = "Curso excluído com sucesso." });
             }
 
-            return NotFound("Aluno não encontrado.");
+            return NotFound("Curso não encontrado.");
         }
 
     }
