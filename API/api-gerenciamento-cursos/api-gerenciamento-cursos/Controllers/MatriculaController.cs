@@ -49,6 +49,7 @@ namespace api_gerenciamento_cursos.Controllers
             return Ok(matriculas);
         }
 
+        //No caso aqui, poderia pedir {alunoId}, apenas para facilitar o entendimento. Porém, está tudo funcional.
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarMatricula(int id)
         {

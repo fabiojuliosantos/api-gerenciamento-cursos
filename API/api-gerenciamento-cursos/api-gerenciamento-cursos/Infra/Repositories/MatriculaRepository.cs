@@ -38,6 +38,10 @@ namespace api_gerenciamento_cursos.Infra.Repositories
             }
         }
 
+        /*
+            Apenas por boa prática, define a variável id como AlunoId, já que no swagger é exibido apenas como id,
+            fica subentendido que o id aguardado é o da matrícula.
+        */
         public async Task<bool> DeletarMatriculaAsync(int id)
         {
             try
