@@ -102,6 +102,8 @@ namespace api.gerenciamento.cursos.Infra.Repositories
                 throw new Exception($"Houve erro ao buscar todos os alunos: {ex.Message}", ex);
             }
         }
+
+        //O retorno paginado não traz os cursos de cada aluno. A busca apenas retorna os dados dos alunos.
         public async Task<RetornoPaginadoAluno<Aluno>> BuscarAlunosPorPagina(int pagina, int quantidade)
         {
             try
