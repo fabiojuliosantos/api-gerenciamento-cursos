@@ -76,7 +76,7 @@ namespace GerenciamentoCursos.Infra.Repositories
             }
         }
 
-
+        //Quando tiver apenas um parâmetro, pode usar o string.Format() para evitar o uso da variavel de parametros
         public async Task<bool> ExcluirMatriculaAsync(int id)
         {
             try

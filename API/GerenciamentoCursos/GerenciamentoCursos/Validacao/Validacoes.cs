@@ -3,6 +3,9 @@ using GerenciamentoCursos.Domain;
 
 namespace GerenciamentoCursos.Services.Services
 {
+    /*
+        Bom uso das validações, utilizando Regex para validar o campo de email
+    */
     public static class Validacoes
     {
         public static List<string> ValidarAluno(Aluno aluno)

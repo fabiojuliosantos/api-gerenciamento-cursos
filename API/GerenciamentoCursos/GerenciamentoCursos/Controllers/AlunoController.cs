@@ -19,7 +19,12 @@ namespace GerenciamentoCursos.API.Controllers
             _service = service;
             _mapper = mapper;
         }
-
+        
+        /*
+            As validações que provém da regra de negócio, podem ficar no service,
+            deixando as controllers responsáveis apenas pelo tratamento e manipulação
+            das informações das requisições.
+        */
         [HttpPost("api/alunos")]
         public async Task<IActionResult> CriarAluno([FromBody] AlunoDto alunoDto)
         {

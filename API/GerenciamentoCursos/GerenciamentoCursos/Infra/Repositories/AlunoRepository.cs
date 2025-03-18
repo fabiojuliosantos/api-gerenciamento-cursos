@@ -33,7 +33,7 @@ namespace GerenciamentoCursos.Infra.Repositories
                 };
 
                 var alunoID = await _connection.ExecuteScalarAsync<int>(sql, parametros);
-
+                
                 if (alunoID > 0)
                 {
                     aluno.AlunoID = alunoID;

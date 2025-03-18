@@ -20,7 +20,8 @@ namespace GerenciamentoCursos.Controllers
             _service = service;
             _mapper = mapper;
         }
-
+        
+        //O mesmo aplica-se aqui sobre as validações
         [HttpPost("/api/cursos")]
         public async Task<IActionResult> CriarCurso([FromBody] CursoDto cursoDto)
         {
