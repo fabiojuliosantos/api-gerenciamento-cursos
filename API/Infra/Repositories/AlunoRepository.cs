@@ -16,6 +16,10 @@ public class AlunoRepository : IAlunoRepository
         _conn = conn;
     }
 
+    /*
+        Checar as buscas de alunos, a rota de listar todos s alunos não exibe as informações dos cursos, 
+        enquanto a rota de exibir o aluno por id não exibe a descrição e a cargaHoraria do curso
+    */
     public async Task<RetornoPaginado<Aluno>> ListaAlunosPaginados(int pagina, int quantidade)
     {
         try

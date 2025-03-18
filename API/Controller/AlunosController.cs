@@ -16,6 +16,7 @@ public class AlunosController : ControllerBase
         _service = service;
     }
 
+    //O retorno de todos os alunos não traz os cursos correspondentes ao aluno
     [HttpGet("lista-alunos")]
     public async Task<IActionResult> ListaTodosAlunos()
     {
@@ -85,7 +86,8 @@ public class AlunosController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-
+    
+    //A busca paginada não traz a descrição do curso, nem carga horária
     [HttpGet("{pagina}/{quantidade}")]
     public async Task<IActionResult> ListaAlunosPaginada(int pagina, int quantidade)
     {

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
+//Considere criar os DTOs fora da Infra, já que são objetos de transferência de dados, e atuam em abstração
 namespace Api.Infra.Dto;
 
 public class CreateAlunoDto
