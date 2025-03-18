@@ -35,6 +35,8 @@ public class MatriculaRepository : IMatriculaRepository
     {
         try
         {
+            
+            //Tem um erro na declaração da variável OFFSET, na query está como OFFESET, o que não permite fazer a busca da matrícula            
             string sql = "SELECT * FROM Matriculas ORDER BY MatriculaID OFFSET @OFFESET ROWS FETCH NEXT @FETCHNEXT ROWS ONLY";
             var parametros = new
             {
