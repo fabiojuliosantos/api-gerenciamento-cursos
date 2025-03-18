@@ -5,6 +5,7 @@ namespace GerenciamentoCurso.Dto;
 
 public class AlunoDto
 {
+    //Como já está sendo passado o Required, não precisa passar o NotNull
     [NotNull]
     [Required(ErrorMessage = "O nome do usuário é obrigatório", AllowEmptyStrings = false)]
     [StringLength(50, MinimumLength = 3, ErrorMessage = "O nome deve conter entre 3 e 50 caracteres")]

@@ -2,6 +2,9 @@
 {
     public class RetornoPaginadoMatricula
     {
+        /*
+            O mesmo se aplica aqui, sobre a criação de classe para retorno Paginado.
+        */
         public class RetornoPaginado<Matricula>
         {
             public int TotalRegistro { get; set; }

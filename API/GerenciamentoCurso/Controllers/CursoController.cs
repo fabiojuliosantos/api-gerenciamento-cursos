@@ -20,9 +20,9 @@ namespace GerenciamentoCurso.Controllers
             _mapper = mapper;
         }
 
-
-
-
+        /*Ao criar rotas, atente-se à nomenclatura. Utilize pascalCase para criar a nomenclatura
+        [HttpPost("AdicionarCurso")]
+        */
         [HttpPost("Adicionar_Curso")]
 
         public async Task<IActionResult> AdicionarCurso([FromBody] CursoDto cursoDto)
@@ -47,7 +47,7 @@ namespace GerenciamentoCurso.Controllers
             }
 
         }
-        [HttpPut("AtualizarCurso/{id}")]
+        [HttpPut("AtualizarCurso/{id}")] //=> Crie as rotas dessa forma
         public async Task<IActionResult> AtualizarCurso(int id, [FromBody] CursoDto cursoDto)
         {
 
