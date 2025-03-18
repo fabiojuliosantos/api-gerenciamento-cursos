@@ -46,7 +46,11 @@ public class AlunosRepository : IAlunosRepository
             throw;
         }
     }
-
+    /*
+        Na atualização dos alunos, ele usa o alunoID como parâmetro pra achar o aluno que vai ser editado.
+        Porém, o aluno id não está sendo referenciado, dessa forma o script não encontra o aluno e quebra,
+        chequei e vi que no dto de alunos que é utilizado falta esse campo para encontrar o aluno.
+    */
     public async Task<bool> AtualizarAlunoAsync(Alunos alunos)
     {
         try
@@ -104,6 +108,9 @@ public class AlunosRepository : IAlunosRepository
             foreach(var aluno in alunos)
             {
                 string sqlCursos = "SELECT * FROM CURSOS C INNER JOIN MATRICULAS M ON C.CURSOID = M.CURSOID WHERE M.ALUNOID = @ALUNOID;";
+                /*Sugestão: Quando tiver apenas um parâmetro na query, pode usar o string.Format(), que reduz a quantidade de linhas eliminando os parâmetros
+                  Mas o código está funcional, então não tem problema continuar assim.
+                */
 
                 var cursos = await _context.QueryAsync<Cursos>(sqlCursos, new { AlunoId = aluno.AlunoId });
                 aluno.Cursos = cursos.ToList();
