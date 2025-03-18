@@ -62,6 +62,7 @@ namespace api.gerenciamento.cursos.Infra.Repositories
         }
         public async Task<List<Aluno>> BuscarTodosAlunos()
         {
+            //Checar o uso de Left Join, e outras maneiras de retornar todos os alunos
             try
             {
                 string sql = 

@@ -3,7 +3,7 @@ CREATE DATABASE FaculdadeDB;
 -- alunos
 CREATE TABLE Alunos (
     alunoID INT PRIMARY KEY IDENTITY(1,1), 
-    matriculaID INT,                       
+    matriculaID INT,                       --Na definiÃ§Ã£o do Banco, nÃ£o seria necessÃ¡ria a inserÃ§Ã£o de MatriculaID nesta tabela
     nome VARCHAR(255) NOT NULL,             
     idade INT,                             
     email VARCHAR(255) UNIQUE NOT NULL,     
@@ -14,7 +14,7 @@ CREATE TABLE Alunos (
 -- cursos
 CREATE TABLE Cursos (
     cursoID INT PRIMARY KEY IDENTITY(1,1),
-	matriculaID INT,                        
+	matriculaID INT,                      --Na definiÃ§Ã£o do Banco, nÃ£o seria necessÃ¡ria a inserÃ§Ã£o de MatriculaID nesta tabela  
     nome VARCHAR(255) NOT NULL,             
     descricao TEXT,                         
     cargaHoraria INT NOT NULL,              
@@ -22,7 +22,7 @@ CREATE TABLE Cursos (
 );
 
 
---  matrículas (relacionamento entre alunos e cursos)
+--  matrï¿½culas (relacionamento entre alunos e cursos)
 CREATE TABLE Matriculas (
     matriculaID INT PRIMARY KEY IDENTITY(1,1), 
     alunoID INT,                                
@@ -36,7 +36,7 @@ CREATE TABLE Matriculas (
 --Cadastro Alunos
 INSERT INTO Alunos (Nome, Idade, Email, DataMatricula)
 VALUES
-('João Silva', 20, 'joao.silva@email.com', '2023-08-01'),
+('Joï¿½o Silva', 20, 'joao.silva@email.com', '2023-08-01'),
 ('Maria Oliveira', 22, 'maria.oliveira@email.com', '2023-07-15'),
 ('Pedro Souza', 21, 'pedro.souza@email.com', '2023-09-10'),
 ('Ana Santos', 19, 'ana.santos@email.com', '2023-06-25'),
@@ -48,7 +48,7 @@ VALUES
 ('Larissa Martins', 19, 'larissa.martins@email.com', '2022-12-22'),
 ('Marcos Fernandes', 23, 'marcos.fernandes@email.com', '2022-11-12'),
 ('Fernanda Ribeiro', 22, 'fernanda.ribeiro@email.com', '2022-10-08'),
-('Vinícius Silva', 21, 'vinicius.silva@email.com', '2022-09-19'),
+('Vinï¿½cius Silva', 21, 'vinicius.silva@email.com', '2022-09-19'),
 ('Roberta Alves', 20, 'roberta.alves@email.com', '2022-08-05'),
 ('Rafael Oliveira', 22, 'rafael.oliveira@email.com', '2022-07-22'),
 ('Carolina Souza', 23, 'carolina.souza@email.com', '2022-06-17'),
@@ -58,14 +58,14 @@ VALUES
 ('Gustavo Santos', 22, 'gustavo.santos@email.com', '2022-02-12'),
 ('Tatiane Lima', 19, 'tatiane.lima@email.com', '2022-01-18'),
 ('Felipe Rocha', 20, 'felipe.rocha@email.com', '2021-12-15'),
-('Jéssica Silva', 23, 'jessica.silva@email.com', '2021-11-10'),
+('Jï¿½ssica Silva', 23, 'jessica.silva@email.com', '2021-11-10'),
 ('Ricardo Almeida', 21, 'ricardo.almeida@email.com', '2021-10-05'),
 ('Juliana Rocha', 22, 'juliana.rocha@email.com', '2021-09-14'),
 ('Bruno Lima', 24, 'bruno.lima@email.com', '2021-08-22'),
 ('Aline Pereira', 19, 'aline.pereira@email.com', '2021-07-09'),
 ('Eduarda Costa', 21, 'eduarda.costa@email.com', '2021-06-03'),
 ('Felipe Almeida', 23, 'felipe.almeida@email.com', '2021-05-19'),
-('Cláudia Souza', 22, 'claudia.souza@email.com', '2021-04-10'),
+('Clï¿½udia Souza', 22, 'claudia.souza@email.com', '2021-04-10'),
 ('Vitor Oliveira', 24, 'vitor.oliveira@email.com', '2021-03-15'),
 ('Gabriela Fernandes', 19, 'gabriela.fernandes@email.com', '2021-02-20'),
 ('Mariana Pinto', 22, 'mariana.pinto@email.com', '2021-01-14'),
@@ -73,11 +73,11 @@ VALUES
 ('Simone Lima', 23, 'simone.lima@email.com', '2020-11-19'),
 ('Amanda Almeida', 20, 'amanda.almeida@email.com', '2020-10-10'),
 ('Fabiana Costa', 24, 'fabiana.costa@email.com', '2020-09-15'),
-('Vinícius Pereira', 22, 'vinicius.pereira@email.com', '2020-08-03'),
+('Vinï¿½cius Pereira', 22, 'vinicius.pereira@email.com', '2020-08-03'),
 ('Robson Souza', 21, 'robson.souza@email.com', '2020-07-08'),
 ('Tatiane Almeida', 23, 'tatiane.almeida@email.com', '2020-06-14'),
 ('Luciana Rocha', 24, 'luciana.rocha@email.com', '2020-05-05'),
-('César Lima', 22, 'cesar.lima@email.com', '2020-04-19'),
+('Cï¿½sar Lima', 22, 'cesar.lima@email.com', '2020-04-19'),
 ('Douglas Souza', 21, 'douglas.souza@email.com', '2020-03-10'),
 ('Cristiane Fernandes', 19, 'cristiane.fernandes@email.com', '2020-02-20'),
 ('Ana Lima', 23, 'ana.lima@email.com', '2020-01-10'),
@@ -92,19 +92,19 @@ VALUES
 INSERT INTO Cursos (Nome, Descricao, CargaHoraria)
 VALUES
 ('Engenharia de Software', 'Curso de Engenharia de Software focado em desenvolvimento de sistemas.', 360),
-('Administração', 'Curso de Administração com ênfase em gestão de negócios e recursos.', 320),
-('Medicina', 'Curso de Medicina com formação para médicos clínicos gerais.', 500),
-('Direito', 'Curso de Direito com foco em advocacia e legislação brasileira.', 400),
-('Arquitetura', 'Curso de Arquitetura com ênfase em projetos e urbanismo.', 380),
-('Design Gráfico', 'Curso de Design Gráfico focado em criação visual e publicidade.', 300),
-('Psicologia', 'Curso de Psicologia com formação para psicólogos clínicos.', 380),
-('Fisioterapia', 'Curso de Fisioterapia com ênfase em tratamentos e reabilitação.', 350),
-('Engenharia Civil', 'Curso de Engenharia Civil focado na construção de obras e infraestrutura.', 420),
-('Ciências da Computação', 'Curso de Ciência das Computação com foco em desenvolvimento de software.', 500),
-('Biomedicina', 'Curso de Biomedicina com foco em análises clínicas e pesquisa.', 350),
-('Veterinária', 'Curso de Veterinária com ênfase no cuidado de animais e saúde animal.', 500),
-('Arqueologia', 'Curso de Arqueologia com ênfase na preservação do patrimonio cultural, bioarquologia e etnicidade.', 500),
-('Análise e Desenvolvimento de Sistemas', 'Curso de Análise e Desenvolvimento de Sistema com foco em análise e desenvolvimento de software.', 500);
+('Administraï¿½ï¿½o', 'Curso de Administraï¿½ï¿½o com ï¿½nfase em gestï¿½o de negï¿½cios e recursos.', 320),
+('Medicina', 'Curso de Medicina com formaï¿½ï¿½o para mï¿½dicos clï¿½nicos gerais.', 500),
+('Direito', 'Curso de Direito com foco em advocacia e legislaï¿½ï¿½o brasileira.', 400),
+('Arquitetura', 'Curso de Arquitetura com ï¿½nfase em projetos e urbanismo.', 380),
+('Design Grï¿½fico', 'Curso de Design Grï¿½fico focado em criaï¿½ï¿½o visual e publicidade.', 300),
+('Psicologia', 'Curso de Psicologia com formaï¿½ï¿½o para psicï¿½logos clï¿½nicos.', 380),
+('Fisioterapia', 'Curso de Fisioterapia com ï¿½nfase em tratamentos e reabilitaï¿½ï¿½o.', 350),
+('Engenharia Civil', 'Curso de Engenharia Civil focado na construï¿½ï¿½o de obras e infraestrutura.', 420),
+('Ciï¿½ncias da Computaï¿½ï¿½o', 'Curso de Ciï¿½ncia das Computaï¿½ï¿½o com foco em desenvolvimento de software.', 500),
+('Biomedicina', 'Curso de Biomedicina com foco em anï¿½lises clï¿½nicas e pesquisa.', 350),
+('Veterinï¿½ria', 'Curso de Veterinï¿½ria com ï¿½nfase no cuidado de animais e saï¿½de animal.', 500),
+('Arqueologia', 'Curso de Arqueologia com ï¿½nfase na preservaï¿½ï¿½o do patrimonio cultural, bioarquologia e etnicidade.', 500),
+('Anï¿½lise e Desenvolvimento de Sistemas', 'Curso de Anï¿½lise e Desenvolvimento de Sistema com foco em anï¿½lise e desenvolvimento de software.', 500);
 
 -- Matriculas
 INSERT INTO Matriculas (AlunoID, CursoID, DataMatricula)
