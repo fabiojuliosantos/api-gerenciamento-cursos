@@ -34,7 +34,11 @@ public class MatriculaRepository : IMatriculaRepository
             var totalMatriculas = "SELECT COUNT(*) FROM MATRICULAS";
 
             var retornoTotalMatriculas = await _connection.ExecuteScalarAsync<int>(totalMatriculas);
-
+            
+            /*
+            Nesse caso, o código retorna os itens corretamente mas a mensagem 'Não foram encontrados registros nesta página!' também é exibida
+            caso o número de registros seja menor ao solicitado por página
+            */
             if (validacao.VerificaPaginaVazia(pagina, qtdRegistros, retornoTotalMatriculas))
             {
                 return new RetornoPaginado<Matricula>()

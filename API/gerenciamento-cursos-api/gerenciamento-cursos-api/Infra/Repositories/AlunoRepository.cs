@@ -53,7 +53,8 @@ public class AlunoRepository : IAlunoRepository
         }
         catch (Exception ex) { throw; }
     }
-
+    
+    //O mesmo que ocorria na busca paginada de matrícula ocorre aqui, com a validação passando que não existem registros para página
     public async Task<RetornoPaginado<Aluno>> BuscarAlunosPagina(int pagina, int qtdRegistros)
     {
         try
