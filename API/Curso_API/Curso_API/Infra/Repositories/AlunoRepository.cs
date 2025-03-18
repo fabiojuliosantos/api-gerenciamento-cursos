@@ -15,11 +15,6 @@ public class AlunoRepository : IAlunoRepository
         _connection = connection;
     }
 
-    //Esse construtor não está sendo utilizado, considere a remoção.
-    public AlunoRepository()
-    {
-    }
-
     public async Task<bool> AdicionarAluno(Aluno aluno)
     {
         try
