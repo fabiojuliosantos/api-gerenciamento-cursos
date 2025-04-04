@@ -13,6 +13,18 @@ public class AlunoService : IAlunoService
         _repository = repository;
     }
 
+    public async Task<bool> AdicionarAluno(Aluno  aluno)
+    {
+        try
+        {
+            return await _repository.AdicionarAluno(aluno);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
     public async Task<List<Aluno>> BuscarTodosAlunos()
     {
         try
@@ -23,5 +35,42 @@ public class AlunoService : IAlunoService
         {
             throw;
         }
+    }
+
+    public async Task<Aluno> BuscarAlunoPorId(int id)
+    {
+        try
+        {
+            return await _repository.BuscarAlunoPorId(id);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public async Task<bool> AtualizarAluno(Aluno aluno)
+    {
+        try
+        {
+            return await _repository.AtualizarAluno(aluno);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public async Task<bool> DeletarAluno(int id)
+    {
+        try
+        {
+            return await _repository.DeletarAluno(id);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+
     }
 }

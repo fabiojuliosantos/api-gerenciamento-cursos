@@ -12,7 +12,7 @@ public class AlunoDto
     [StringLength(100, ErrorMessage = "o nome não pode ultrapassar 100 caracteres")]
     public string Nome { get; set; }
 
-    [Required(ErrorMessage = "A idade do aluno é obrigatorio")]
+    [Range(1, int.MaxValue, ErrorMessage = "A idade deve ser maior que 16 anos.")]
     public int Idade { get; set; }
     public string Email { get; set; }
     public DateTime DataMatricula { get; set; }
