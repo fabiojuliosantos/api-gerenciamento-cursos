@@ -70,7 +70,7 @@ public class CursoController : ControllerBase
             curso.CursoID = id;
             var res = await _service.AtualizarCurso(curso);
             if (res) return Ok("Curso atualizado com sucesso!");
-            return BadRequest("Erro inesperado ao cadastrar curso!");
+            return BadRequest("Erro inesperado ao atualizar curso!");
         }
         catch (Exception e) { return BadRequest(e.Message); }
     }

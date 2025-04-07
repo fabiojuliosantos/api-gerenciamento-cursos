@@ -10,5 +10,6 @@ public class Profiles : Profile
     {
         CreateMap<AlunoDto, Aluno>();
         CreateMap<CursoDto, Curso>();
+        CreateMap<MatriculaDto, Matricula>();
     }
 }

@@ -70,7 +70,7 @@ public class AlunoController : ControllerBase
             aluno.DataMatricula = DateTime.Now;
             var res = await _service.AtualizarAluno(aluno);
             if (res) return Ok("Aluno atualizado com sucesso!");
-            return BadRequest("Erro inesperado ao cadastrar aluno!");
+            return BadRequest("Erro inesperado ao atualizar aluno!");
         }
         catch (Exception e) { return BadRequest(e.Message); }
     }
