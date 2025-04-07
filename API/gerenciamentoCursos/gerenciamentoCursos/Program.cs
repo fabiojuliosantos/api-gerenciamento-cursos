@@ -21,6 +21,8 @@ builder.Services.AddScoped<IDbConnection>(provider =>
 //injeção de dependencias dos services e repositories
 builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
 builder.Services.AddScoped<IAlunoService, AlunoService>();
+builder.Services.AddScoped<ICursoService, CursoService>();
+builder.Services.AddScoped<ICursoRepository, CursoRepository>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
