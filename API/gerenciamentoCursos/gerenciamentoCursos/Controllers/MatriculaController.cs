@@ -40,6 +40,7 @@ public class MatriculaController : ControllerBase
         try
         {
             var matriculas = await _service.BuscarTodasMatriculas();
+            //Mesmo caso de BuscarTodosAlunos():
             if(matriculas == null || matriculas.Count == 0)
             {
                 return NotFound("Nenhuma matricula encontrada");
@@ -66,6 +67,7 @@ public class MatriculaController : ControllerBase
     {
         try
         {
+            //Mesmo caso de AtualizarAluno
             var matricula = _mapper.Map<Matricula>(matriculaDto);
             matricula.DataMatricula = DateTime.Now;
             matricula.MatriculaID = id;

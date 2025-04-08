@@ -24,6 +24,7 @@ public class AlunoController : ControllerBase
     {
         try
         {
+            //Aqui não é necessário usar o else, a condição sendo satisfeita, já cai no retorno que finaliza a execução do método.
             var aluno = _mapper.Map<Aluno>(alunoDto);
             aluno.DataMatricula = DateTime.Now;
             var res = await _service.AdicionarAluno(aluno);
@@ -39,6 +40,10 @@ public class AlunoController : ControllerBase
         try
         {
             var alunos = await _service.BuscarTodosAlunos();
+            /*
+                Como é uma lista, a opção de alunos == null sempre será falsa, pois retornará uma lista sem itens.
+                if(alunos.Count == 0) return NotFound("Nenhum aluno cadastrado");
+            */
             if (alunos == null || alunos.Count == 0)
             {
                 return NotFound("Nenhum aluno cadastrado");
@@ -65,6 +70,9 @@ public class AlunoController : ControllerBase
     {
         try
         {
+            /*
+                Como esse id está vindo da url, e já está contido na model, pode sair do DTO.
+            */
             var aluno = _mapper.Map<Aluno>(alunoDto);
             aluno.AlunoID = id;
             aluno.DataMatricula = DateTime.Now;
@@ -93,6 +101,10 @@ public class AlunoController : ControllerBase
         try
         {
             var alunoPaginado = await _service.RetornoAlunoPaginado(pagina, quantidade);
+            /*
+                Aqui também não retornará nulo, caso queira checar se há registros ou não, pode usar a seguinte abordagem:
+                if(alunoPaginado.TotalRegistros == 0) return NotFound("alunos não encontrados!");
+            */
             if (alunoPaginado == null) return NotFound("alunos não encontrados");
             return Ok(alunoPaginado);
         }

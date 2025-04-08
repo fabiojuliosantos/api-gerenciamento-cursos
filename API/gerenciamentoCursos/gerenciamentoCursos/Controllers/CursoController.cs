@@ -39,6 +39,7 @@ public class CursoController : ControllerBase
         try
         {
             var cursos = await _service.BuscarTodosCursos();
+            //Aqui é o mesmo caso de BuscarTodosAlunos();
             if (cursos == null || cursos.Count == 0)
             {
                 return NotFound("Nenhum curso cadastrado!");
@@ -66,6 +67,7 @@ public class CursoController : ControllerBase
     {
         try
         {
+            //Mesmo caso de AtualizarAluno
             var curso = _mapper.Map<Curso>(cursoDto);
             curso.CursoID = id;
             var res = await _service.AtualizarCurso(curso);
