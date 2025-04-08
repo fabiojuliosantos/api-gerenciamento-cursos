@@ -86,4 +86,17 @@ public class AlunoController : ControllerBase
         }
         catch (Exception e) { return BadRequest(e.Message); }
     }
+
+    [HttpGet("aluno-paginado")]
+    public async Task<IActionResult> RetornoAlunoPaginado([FromQuery] int pagina, [FromQuery] int quantidade)
+    {
+        try
+        {
+            var alunoPaginado = await _service.RetornoAlunoPaginado(pagina, quantidade);
+            if (alunoPaginado == null) return NotFound("alunos não encontrados");
+            return Ok(alunoPaginado);
+        }
+        catch (Exception e) { return BadRequest(e.Message); }
+    }
+
 }

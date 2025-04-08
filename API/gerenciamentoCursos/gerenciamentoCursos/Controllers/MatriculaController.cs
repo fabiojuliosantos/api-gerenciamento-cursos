@@ -27,7 +27,7 @@ public class MatriculaController : ControllerBase
             var matricula = _mapper.Map<Matricula>(matriculaDto);
             matricula.DataMatricula = DateTime.Now;
             var res = await _service.AdicionarMatricula(matricula);
-            if (res) return Ok("Matricula cadastradoa com sucesso!");
+            if (res) return Ok("Matricula cadastrada com sucesso!");
             return BadRequest("Erro inesperado ao cadastrar matricula!");
         }
         catch (Exception e) { return BadRequest(e.Message); }

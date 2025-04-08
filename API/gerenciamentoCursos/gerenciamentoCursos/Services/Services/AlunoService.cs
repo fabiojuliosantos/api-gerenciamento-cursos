@@ -73,4 +73,16 @@ public class AlunoService : IAlunoService
         }
 
     }
+
+    public async Task<RetornoPaginado<Aluno>> RetornoAlunoPaginado(int pagina, int quantidade)
+    {
+        try
+        {
+            return await _repository.RetornoAlunoPaginado(pagina, quantidade);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
 }

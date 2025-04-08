@@ -9,4 +9,5 @@ public interface IAlunoRepository
     Task<Aluno> BuscarAlunoPorId(int id);
     Task<bool> AtualizarAluno(Aluno aluno);
     Task<bool> DeletarAluno(int id);
+    Task<RetornoPaginado<Aluno>> RetornoAlunoPaginado(int pagina, int quantidade);
 }

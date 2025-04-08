@@ -38,6 +38,11 @@ public class AlunoRepository: IAlunoRepository
         {
             string sqlAluno = $"SELECT * FROM Alunos;";
             var alunos = await _connection.QueryAsync<Aluno>(sqlAluno);
+            foreach (var aluno in alunos) {
+                string sqlCurso = $"SELECT * FROM CURSOS C JOIN MATRICULAS M ON C.CURSOID=M.CURSOID WHERE ALUNOID = {aluno.AlunoID}";
+                var cursos = await _connection.QueryAsync<Curso>(sqlCurso);
+                if (aluno.Curso == null) { aluno.Curso = cursos.ToList(); }
+            }
             return alunos.ToList();
         }
         catch (Exception e) { throw e; }
@@ -47,8 +52,13 @@ public class AlunoRepository: IAlunoRepository
     {
         try
         {
-            var sql = $"SELECT * FROM ALUNOS WHERE ALUNOID = {id}";
-            var aluno = await _connection.QueryFirstOrDefaultAsync<Aluno>(sql);
+            var sqlAluno = $"SELECT * FROM ALUNOS WHERE ALUNOID = {id}";
+            var aluno = await _connection.QueryFirstOrDefaultAsync<Aluno>(sqlAluno);
+            if (aluno != null) {
+                string sqlCurso = $"SELECT * FROM CURSOS C JOIN MATRICULAS M ON C.CURSOID=M.CURSOID WHERE ALUNOID = {id}";
+                var cursos = await _connection.QueryAsync<Curso>(sqlCurso);
+                if (aluno.Curso == null) { aluno.Curso = cursos.ToList(); }
+            }
             return aluno;
         }
         catch (Exception e) { throw e; }
@@ -84,5 +94,37 @@ public class AlunoRepository: IAlunoRepository
         catch (Exception e) { throw e; }
 
     }
-    
+
+    public async Task<RetornoPaginado<Aluno>> RetornoAlunoPaginado(int pagina, int quantidade)
+    {
+        try
+        {
+            string sql = $"SELECT * FROM Alunos ORDER BY AlunoID OFFSET @OFFSET ROWS FETCH NEXT @FETCHNEXT ROWS ONLY";
+            var parametros = new
+            {
+                OFFSET = (pagina - 1) * quantidade,
+                FETCHNEXT = quantidade
+            };
+            var alunos = await _connection.QueryAsync<Aluno>(sql, parametros);
+            foreach (var aluno in alunos)
+            {
+                string cursoSql = $"SELECT * FROM CURSOS C JOIN MATRICULAS M ON C.CURSOID=M.CURSOID WHERE ALUNOID = {aluno.AlunoID}";
+                var cursos = await _connection.QueryAsync<Curso>(cursoSql);
+                if (aluno.Curso == null) { aluno.Curso = cursos.ToList(); }
+
+            }
+
+            string sqlQtdAluno = "SELECT COUNT(*) FROM Alunos";
+            var qtdAlunos = await _connection.QueryFirstOrDefaultAsync<int>(sqlQtdAluno);
+            return new RetornoPaginado<Aluno>
+            {
+                Pagina = pagina,
+                QtdPagina = quantidade,
+                TotalRegistros = qtdAlunos,
+                Listagem = alunos.ToList()
+            };
+        }
+        catch (Exception e) { throw e; }
+    }
+
 }
